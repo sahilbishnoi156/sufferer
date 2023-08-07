@@ -1,0 +1,29 @@
+#profile-navigation {
+  position: relative;
+  z-index: 1;
+}
+#profile-navigation::selection {
+  display: none;
+}
+#profile-navigation div {
+  cursor: pointer;
+}
+#profile-navigation::before {
+  content: "";
+  height: 2px;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  background-color: white;
+  scale: var(--width, 23%) 1;
+  translate: var(--left, 0px);
+  transition: 0.3s;
+  transform-origin: left;
+  border-radius: 200%;
+}
+@media only screen and (max-width: 425px) {
+  /* #profile-navigation{
+    background-color: lightblue;
+  } */
+}

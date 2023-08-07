@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=REM&family=Rubik&display=swap') ;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  font-family: 'Rubik' !important;
+  background-color: black;
+}
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+*::-webkit-scrollbar{
+  display: none;
+}
+nav{
+  box-sizing: border-box !important;
+}
+#navigation-icons a i{
+  transition: .05s;
+}
+
+#navigation-icons a:hover i{
+  scale: 1.2;
+}
+
+/* Loading */
+#quote-item::-webkit-scrollbar,
+#quote-area::-webkit-scrollbar{
+  display: none;
+}
+#quote-area{
+  font-size: 1.2rem;
+}
+#site-heading {
+  font-weight: 900;
+  background: linear-gradient(
+    135deg,
+    #5335cf 0%,
+    #de005e 25%,
+    #f66e48 50%,
+    #de005e 75%,
+    #5335cf 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  background-size: 500% auto;
+}
+@keyframes textShine {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+#register-heading {
+  font-weight: 900;
+  background: linear-gradient(
+    to right,
+    #7953cd 20%,
+    #00affa 30%,
+    #0190cd 70%,
+    #764ada 80%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  background-size: 500% auto;
+  animation: textShine 5s ease-in-out infinite alternate;
+}
