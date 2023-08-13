@@ -50,7 +50,7 @@ export default function Navbar() {
               } overflow-hidden t style={navToggle ? openStyle : closeStyle } ransition duration-300`}
               ref={headingRef}
             >
-              QUOTOMANIA
+              Sufferer
             </span>
           </Link>
         </div>

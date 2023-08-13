@@ -9,13 +9,13 @@ export default function Jumbotron() {
         <div className="flex flex-col gap-2">
           <div >
             <h1 className="text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white ">
-              Welcome to QuotoMania
+              Welcome to Sufferer
             </h1>
             <h5 className="text-2xl text-green-500 ">Where Words Find Wings!</h5>
           </div>
           <p className="text-sm font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">
           Unleash the Power of Words and Inspiration. Share, Connect, and Discover a World of Wisdom
-          Are you ready to dive into a world of endless wisdom? Join Quotely today and explore the boundless power of words!
+          Are you ready to dive into a world of endless wisdom? Join Sufferer today and explore the boundless power of words!
           </p>
         </div>
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
