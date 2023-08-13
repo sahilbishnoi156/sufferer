@@ -93,6 +93,7 @@ export default function Setting({ handleLogOut, user, id }) {
         );
         const imageJsonData = await ImageResponse.json();
         setCurrentUser({...currentUser, image:imageJsonData.url})
+        var usrCldImage = imageJsonData.url;
       }
   
       // Changing other data
@@ -101,7 +102,7 @@ export default function Setting({ handleLogOut, user, id }) {
         body: JSON.stringify({
           username: currentUser.username,
           email: currentUser.email,
-          image: currentUser.image , // Use the new URL obtained from the API response
+          image: usrCldImage , // Use the new URL obtained from the API response
           given_name: currentUser.given_name,
           family_name: currentUser.family_name,
           about: currentUser.about,

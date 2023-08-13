@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Skeleton from './Skeleton';
 
 export default function SideProfile({session}){
-  const [dataLoading, setDataLoading] = useState(false)
+    const [dataLoading, setDataLoading] = useState(false)
     const [allUsers, setUsers] = useState([]);
     const [currentUser, setCurrentUser] = useState({})
 
@@ -27,12 +27,14 @@ export default function SideProfile({session}){
     setCurrentUser(user);
   };
   useEffect(() => {
+    if (window.innerWidth > 640 ) {
       fetchRelatedUsers();
       fetchCurrentUser();
+    }
   }, [session?.user.id,localStorage.getItem('userId')]);
     
   return (
-    <div className="h-screen flex flex-col justify-start gap-14 px-8 py-20 fixed  border-l-2 border-gray-700">
+    <div className="h-screen flex flex-col justify-start gap-14 px-8 py-20 fixed border-l-2 border-gray-700">
       {!dataLoading ? <div className='flex gap-4 items-center justify-start w-full'>
         <img src={currentUser.image || "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="} alt="d" className='h-16 w-16 rounded-full object-cover'/>
         <span>

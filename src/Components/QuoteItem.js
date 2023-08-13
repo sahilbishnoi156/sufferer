@@ -75,7 +75,7 @@ export default function QuoteItem({ description, title, creator, date, id , setP
         <div className="w-full h-full flex items-center justify-start gap-4 overflow-hidden">
           <img
             src={creator.image}
-            alt="d"
+            alt="not found"
             className="sm:h-10 sm:w-10 h-8 w-8 rounded-full object-cover "
           />
           <span className="">
