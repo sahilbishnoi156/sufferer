@@ -3,6 +3,7 @@ import Setting from "@/Components/Setting";
 import { useSession, signOut } from "next-auth/react";
 import Loading from "@/Components/Loading";
 import { useRouter } from "next/navigation";
+import LoadingBar from "react-top-loading-bar";
 import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 
@@ -11,6 +12,7 @@ export default function page() {
   const { data: session, status } = useSession();
 
   // States
+  const [progress, setProgress] = useState(0)
   const [user, setUser] = useState({});
 
   // Hooks
@@ -18,6 +20,7 @@ export default function page() {
 
   // Handling Logout
   const handleLogOut = () => {
+    setProgress(50)
     localStorage.clear();
     toast.success(`See ya later ${user.given_name} `, {
       position: "top-right",
@@ -30,15 +33,19 @@ export default function page() {
       theme: "colored",
       });
       signOut();
+      setProgress(100)
   };
 
   // useEffect
   useEffect(() => {
     // Fetching user details
     const fetchUser = async () => {
+      setProgress(40)
       const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem("userId")}`);
+      setProgress(80)
       const data = await response.json();
       setUser(data);
+      setProgress(100)
     };
 
     // If user is authenticated the fetch details
@@ -57,10 +64,16 @@ export default function page() {
   }
   return (
     <div className="sm:p-10 p-4 w-full flex items-center justify-center mb-16">
+      <LoadingBar
+            color="#f11946"
+            progress={progress}
+            onLoaderFinished={() => setProgress(0)}
+      />
       <Setting
         user={user}
         id={session?.user.id || localStorage.getItem("userId")}
         handleLogOut={handleLogOut}
+        setProgress={setProgress}
       />
     </div>
   );

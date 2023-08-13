@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import Loading from "../Components/Loading";
 import { toast } from "react-toastify";
 
-export default function Setting({ handleLogOut, user, id }) {
+export default function Setting({ handleLogOut, user, id, setProgress }) {
   // States
   const [imagePreview, setImagePreview] = useState("");
   const [currentUser, setCurrentUser] = useState(user);
@@ -78,6 +78,7 @@ export default function Setting({ handleLogOut, user, id }) {
   const updateUserInfo = async (e) => {
     e.preventDefault();
     try {
+      setProgress(30)
       setLoading(true);
       // Uploading Image
       if (user.image !== currentUser.image) {
@@ -102,12 +103,13 @@ export default function Setting({ handleLogOut, user, id }) {
         body: JSON.stringify({
           username: currentUser.username,
           email: currentUser.email,
-          image: usrCldImage , // Use the new URL obtained from the API response
+          image: usrCldImage || user.image , // Use the new URL obtained from the API response
           given_name: currentUser.given_name,
           family_name: currentUser.family_name,
           about: currentUser.about,
         }),
       });
+      setProgress(60)
       setLoading(false);
       if (response.status === 200) {
         // Update the currentUser state with the new URL
@@ -134,6 +136,7 @@ export default function Setting({ handleLogOut, user, id }) {
           theme: "colored",
         });
       }
+      setProgress(100)
     } catch (error) {
       console.log(error);
     }

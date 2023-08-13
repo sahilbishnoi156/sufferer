@@ -13,6 +13,7 @@ export default function page() {
     token && setUserLogged(true)
   }, []);
   return (
+    
     <div id="quote-area" className="w-full">
       {status === "authenticated" || userLogged ? <Home /> : <Jumbotron />}
     </div>

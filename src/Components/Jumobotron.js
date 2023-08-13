@@ -1,7 +1,7 @@
 import Link from "next/link";
 export default function Jumbotron() {
   return (
-    <section className="bg-white dark:bg-black h-full w-full absolute top-0 left-0 z-50 flex flex-col justify-start items-center">
+    <section className="bg-white dark:bg-black h-screen w-screen absolute top-0 left-0 z-50 flex flex-col justify-start items-center">
       <div className="w-full flex sm:justify-start justify-center">
         <i className="fa-solid fa-hippo text-white text-6xl p-10"></i>
       </div>
@@ -46,9 +46,6 @@ export default function Jumbotron() {
           >
             Learn more
           </a>
-        </div>
-        <div className="w-full">
-          
         </div>
       </div>
     </section>

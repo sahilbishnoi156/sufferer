@@ -16,7 +16,6 @@ export default function page() {
       try {
         const response = await fetch(`/api/quote/${QuoteId}`);
         const data = await response.json();
-        console.log(data);
         setPost({
           quote: data.quote,
           title: data.title,

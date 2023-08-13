@@ -4,20 +4,25 @@ import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loading from "@/Components/Loading";
+import LoadingBar from "react-top-loading-bar";
 
 export default function page({ params }) {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState({});
+  const [progress, setProgress] = useState(0)
   const searchParams = useSearchParams();
   const router = useRouter();
   const userName = searchParams.get("name");
   const { data: session, status } = useSession();
   useEffect(() => {
     const fetchPosts = async () => {
+      setProgress(30)
       const response = await fetch(`/api/users/${params?.id}/quotes`);
+      setProgress(60)
       const data = await response.json();
       setQuotes(data);
+      setProgress(100)
     };
     const fetchUser = async () => {
       const response = await fetch(`/api/users/getUser/${params?.id}`);
@@ -40,6 +45,11 @@ export default function page({ params }) {
   }
   return (
     <div className="w-full flex justify-center items-center">
+      <LoadingBar
+            color="#f11946"
+            progress={progress}
+            onLoaderFinished={() => setProgress(0)}
+      />
       <MainProfile
         user={currentUser}
         data={quotes}

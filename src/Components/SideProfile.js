@@ -46,7 +46,7 @@ export default function SideProfile({session}){
       <div className='text-xl'>People You May Know</div>
       {dataLoading ? <Skeleton type="sideProfile"/>:<>
         {allUsers.slice(0,5).map((user)=>{
-            return <UserIds heading="People You May Know" key={user._id} username={user.username} user_image={user.image || "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="} userId={user._id} given_name={user.given_name} family_name={user.family_name}/>
+            return <UserIds heading="People You May Know" key={user._id} username={user.username} user_image={user.image} userId={user._id} given_name={user.given_name} family_name={user.family_name}/>
         })}</>}
       </div>
     </div>

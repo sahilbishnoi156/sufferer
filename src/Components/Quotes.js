@@ -19,7 +19,7 @@ export default function Quotes({
         }`}
       >
         <h1 id="quotes-heading" className="text-2xl sm:text-4xl">
-          {section} Quotes : {posts.length}
+          {section} Quotes :
         </h1>
           {dataLoading ? (
             <Skeleton type="quotes" />

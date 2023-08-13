@@ -3,14 +3,16 @@ import "../styles/globals.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/Components/Navbar";
 import BottomNav from "@/Components/BottomNav";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Sufferer - Create and share your thoughts",
-  description: "Connect and engage with friends, family, and colleagues on the go with our innovative social media networking app. Share updates, photos, and experiences, discover new connections, and stay updated on the latest trends. Join our vibrant community today and experience a new way of staying connected.",
+  description:
+    "Connect and engage with friends, family, and colleagues on the go with our innovative social media networking app. Share updates, photos, and experiences, discover new connections, and stay updated on the latest trends. Join our vibrant community today and experience a new way of staying connected.",
 };
 
 export default function RootLayout({ children }) {
@@ -28,7 +30,6 @@ export default function RootLayout({ children }) {
             <div className="sm:hidden block">
               <BottomNav />
             </div>
-            <div className="w-full">{children}</div>
             <ToastContainer
               position="top-right"
               autoClose={3000}
@@ -41,9 +42,15 @@ export default function RootLayout({ children }) {
               pauseOnHover={false}
               theme="colored"
             />
+            <div className="w-full">{children}</div>
           </div>
           <script src="https://cdn.tailwindcss.com"></script>
-          <script src="https://kit.fontawesome.com/f8f9825bbd.js" crossOrigin="anonymous" as="script"></script>
+          <script
+            src="https://kit.fontawesome.com/f8f9825bbd.js"
+            crossOrigin="anonymous"
+            rel="preload"
+            as="script"
+          ></script>
         </Provider>
       </body>
     </html>
