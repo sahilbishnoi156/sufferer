@@ -41,7 +41,10 @@ export default function Login() {
       const response = await getProviders();
       setProviders(response);
     };
-    if (status === "authenticated") {
+    if (localStorage.getItem("authToken")) {
+      router.push("/")
+    }
+    else if (status === "authenticated") {
       setLoading(true);
       checkUserName();
     }
@@ -93,7 +96,7 @@ export default function Login() {
           localStorage.setItem("authToken", data.authToken);
           localStorage.setItem("userId", data.userId);
 
-          toast.success(`Login successful`, {
+          toast.success(`Welcome ${data.user_name}`, {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -150,7 +153,7 @@ export default function Login() {
             Welcome Back!
           </span>
           <p className="text-gray-400 text-center">
-            At Quotely, we believe in the extraordinary power of quotes to
+            At Sufferer, we believe in the extraordinary power of quotes to
             inspire, motivate, and uplift.
           </p>
         </div>
@@ -283,8 +286,8 @@ export default function Login() {
                 type="checkbox"
                 defaultValue=""
                 onChange={togglePasswordVisibility}
+                onBlur={()=>passwordRef.current.type === "password"}
                 className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
-                required=""
               />
             </div>
             <label

@@ -13,11 +13,12 @@ export const POST = async (request) => {
       return new Response(JSON.stringify({ userFound:false }), { status: 200 });
     }
     const isMatch = await bcrypt.compare(password, userExists.password);
+
     if (!isMatch) {
-      return new Response(JSON.stringify({ isMatch:false,userFound:true }), { status: 200 });
+      return new Response(JSON.stringify({ isMatch:false, userFound:true }), { status: 200 });
     }
     const authToken = jwt.sign({ _id: userExists._id }, JWT_SECRET);
-    return new Response(JSON.stringify({ authToken,userFound:true, isMatch:true, userId:userExists._id }), { status: 200 });
+    return new Response(JSON.stringify({ authToken,userFound:true, isMatch:true, userId:userExists._id, user_name:userExists.given_name }), { status: 200 });
 
   } catch (error) {
     console.log(error)

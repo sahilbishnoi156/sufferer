@@ -5,14 +5,14 @@ import Loading from "@/Components/Loading";
 import { useRouter } from "next/navigation";
 import LoadingBar from "react-top-loading-bar";
 import { useEffect, useState } from "react";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 export default function page() {
   // Getting session
   const { data: session, status } = useSession();
 
   // States
-  const [progress, setProgress] = useState(0)
+  const [progress, setProgress] = useState(0);
   const [user, setUser] = useState({});
 
   // Hooks
@@ -20,40 +20,41 @@ export default function page() {
 
   // Handling Logout
   const handleLogOut = () => {
-    setProgress(50)
+    setProgress(50);
     localStorage.clear();
-    toast.success(`See ya later ${user.given_name} `, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      });
-      signOut();
-      setProgress(100)
+    signOut();
+    setProgress(100);
   };
 
   // useEffect
   useEffect(() => {
     // Fetching user details
     const fetchUser = async () => {
-      setProgress(40)
-      const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem("userId")}`);
-      setProgress(80)
+      setProgress(40);
+      const response = await fetch(
+        `/api/users/getUser/${
+          session?.user.id || localStorage.getItem("userId")
+        }`
+      );
+      setProgress(80);
       const data = await response.json();
       setUser(data);
-      setProgress(100)
+      setProgress(100);
     };
 
     // If user is authenticated the fetch details
-    if (status === "authenticated" && session?.user.id || localStorage.getItem("authToken")) {
+    if (
+      (status === "authenticated" && session?.user.id) ||
+      localStorage.getItem("authToken")
+    ) {
       fetchUser();
 
-    // If not then go to "/"
-    } else if (status === "unauthenticated" || status === "" || localStorage.getItem("authToken")) {
+      // If not then go to "/"
+    } else if (
+      status === "unauthenticated" ||
+      status === "" ||
+      localStorage.getItem("authToken")
+    ) {
       router.push("/");
     }
   }, [session?.user.id, status]);
@@ -65,9 +66,9 @@ export default function page() {
   return (
     <div className="sm:p-10 p-4 w-full flex items-center justify-center mb-16">
       <LoadingBar
-            color="#f11946"
-            progress={progress}
-            onLoaderFinished={() => setProgress(0)}
+        color="#f11946"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
       />
       <Setting
         user={user}

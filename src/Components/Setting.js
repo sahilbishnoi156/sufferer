@@ -27,7 +27,7 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
       setCurrentUser({ ...currentUser, image: fileUrl });
     }
   };
-  
+
   // Handling Image click
   const handleImageClick = () => {
     imageRef.current.click();
@@ -53,9 +53,7 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
   // Handling username change
   const handleUserNameChange = (e) => {
     const newUsername = e.target.value.toLowerCase();
-    if (
-      /[^A-Za-z0-9\s._]|[.]{2,}|[_]{2,}/gm.test(newUsername)
-    ) {
+    if (/[^A-Za-z0-9\s._]|[.]{2,}|[_]{2,}/gm.test(newUsername)) {
       // Don't set the username
     } else {
       setCurrentUser({ ...currentUser, username: newUsername.trim() });
@@ -78,7 +76,7 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
   const updateUserInfo = async (e) => {
     e.preventDefault();
     try {
-      setProgress(30)
+      setProgress(30);
       setLoading(true);
       // Uploading Image
       if (user.image !== currentUser.image) {
@@ -93,23 +91,23 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
           }
         );
         const imageJsonData = await ImageResponse.json();
-        setCurrentUser({...currentUser, image:imageJsonData.url})
+        setCurrentUser({ ...currentUser, image: imageJsonData.url });
         var usrCldImage = imageJsonData.url;
       }
-  
+
       // Changing other data
       const response = await fetch(`/api/users/updateUser/${id}`, {
         method: "PATCH",
         body: JSON.stringify({
           username: currentUser.username,
           email: currentUser.email,
-          image: usrCldImage || user.image , // Use the new URL obtained from the API response
+          image: usrCldImage || user.image, // Use the new URL obtained from the API response
           given_name: currentUser.given_name,
           family_name: currentUser.family_name,
           about: currentUser.about,
         }),
       });
-      setProgress(60)
+      setProgress(60);
       setLoading(false);
       if (response.status === 200) {
         // Update the currentUser state with the new URL
@@ -123,8 +121,7 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
           progress: undefined,
           theme: "colored",
         });
-      }
-      else if(response.status === 500){
+      } else if (response.status === 500) {
         toast.error("Something went wrong", {
           position: "top-right",
           autoClose: 3000,
@@ -136,15 +133,111 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
           theme: "colored",
         });
       }
-      setProgress(100)
+      setProgress(100);
     } catch (error) {
       console.log(error);
     }
   };
-  
 
   // Handling Password reset
-  const handleResetPassword = () => {};
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setProgress(10);
+    try {
+      const response = await fetch(`/api/auth/resetpass/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          password: newPassword,
+          old_password: currentPassword,
+        }),
+      });
+      setProgress(60);
+      if (response.status === 200) {
+        // Update the currentUser state with the new URL
+        toast.success("Password Changed", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        handleLogOut();
+      } else if (response.status === 401) {
+        toast.error("Invalid Password", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+      setProgress(100);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Handle Delete user
+  const handleDeleteUser = async (e) => {
+    e.preventDefault();
+    const hasConfirmed = confirm(`Do your really want to delete this account`);
+
+    if (hasConfirmed) {
+      setProgress(10);
+      try {
+        const response = await fetch(`/api/auth/deleteuser/${id.toString()}`, {
+          method: "DELETE",
+        });
+        setProgress(60);
+        if (response.status === 200) {
+          // Update the currentUser state with the new URL
+          toast.success("Account Deleted", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          handleLogOut();
+        } else if (response.status === 401) {
+          toast.error("Something wrong happened", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+        setProgress(100);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    else{
+      toast.error("Your account is safe", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
 
   // Use Effect
   useEffect(() => {
@@ -178,12 +271,12 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
                   ref={imageRef}
                 />
                 <div className="border-2 rounded-full border-gray-500 p-1">
-                <img
-                  src={imagePreview || user.image}
-                  alt="d"
-                  className="sm:h-32 sm:w-32 h-32 w-32 rounded-full cursor-pointer object-cover"
-                  onClick={handleImageClick}
-                />
+                  <img
+                    src={imagePreview || user.image}
+                    alt="d"
+                    className="sm:h-32 sm:w-32 h-32 w-32 rounded-full cursor-pointer object-cover"
+                    onClick={handleImageClick}
+                  />
                 </div>
               </div>
               <div className="w-full">
@@ -445,6 +538,7 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
                 type="password"
                 id="new-password"
                 value={newPassword}
+                min={8}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="New Password"
@@ -464,6 +558,7 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
                 type="password"
                 id="confirm-password"
                 value={confirmPassword}
+                min={8}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Confirm Password"
@@ -472,7 +567,14 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
             <div className="flex gap-8 items-center sm:justify-start justify-evenly mt-6">
               <button
                 type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className={`text-white  focus:outline-none focus:ring-4  font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2  ${
+                  newPassword !== confirmPassword || currentPassword === ""
+                    ? "bg-slate-700"
+                    : "dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 focus:ring-blue-300 bg-blue-700 hover:bg-blue-800"
+                }`}
+                disabled={
+                  newPassword !== confirmPassword || currentPassword === ""
+                }
               >
                 Change
               </button>
@@ -495,7 +597,19 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
           <button
             type="button"
             className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 h-10 "
-            onClick={handleLogOut}
+            onClick={() => {
+              handleLogOut();
+              toast.success(`See ya later ${user.given_name} `, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            }}
           >
             Log Out<i className="fa-solid fa-right-from-bracket ml-4"></i>
           </button>
@@ -514,6 +628,7 @@ export default function Setting({ handleLogOut, user, id, setProgress }) {
           <button
             type="button"
             className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+            onClick={handleDeleteUser}
           >
             Yes, delete my account
           </button>
