@@ -1,5 +1,5 @@
-import User from "../../../../models/user";
-import { connectToDB } from "../../../../utils/database";
+import User from "../../../models/user";
+import { connectToDB } from "../../../utils/database";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET; // Replace with your actual JWT secret
