@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import Navbar from "@/Components/Navbar";
 import BottomNav from "@/Components/BottomNav";
 import "react-toastify/dist/ReactToastify.css";
-
 import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });

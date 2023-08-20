@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 
 
@@ -28,6 +28,23 @@ export default function Navbar() {
     }
   };
 
+  const closeNav = () => {
+    if (navToggle) {
+      headingRef.current.style.transition = ".4s";
+      headingRef.current.style.width = "0";
+      setNavToggle(false);
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener when the component mounts
+    document.addEventListener("click", closeNav);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("click", closeNav);
+    };
+  }, [navToggle]);
   return (
     <nav
       className={`h-12 sm:h-screen flex justify-between items-start flex-col bg-black ${
