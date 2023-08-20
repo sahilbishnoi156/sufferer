@@ -14,7 +14,7 @@ export default function MainProfile({ data, section, setData, user, loading }) {
     followers: [],
     followings: [],
   });
-  const [toggleBtmNav, setToggleBtmNav] = useState(true)
+  const [toggleBtmNav, setToggleBtmNav] = useState(true);
 
   // Ref
   const profileNavRef = useRef();
@@ -26,9 +26,9 @@ export default function MainProfile({ data, section, setData, user, loading }) {
   const pathname = usePathname();
 
   //
-  const handleToggleBottomInfo = ()=>{
-    setToggleBtmNav(!toggleBtmNav)
-  }
+  const handleToggleBottomInfo = () => {
+    setToggleBtmNav(!toggleBtmNav);
+  };
   // Use Effect
   useEffect(() => {
     if (status === "authenticated" || localStorage.getItem("authToken")) {
@@ -62,23 +62,34 @@ export default function MainProfile({ data, section, setData, user, loading }) {
   return (
     <>
       <div className="w-5/6 h-full text-white flex flex-col justify-center items-center gap-2">
-        <div className="sm:hidden absolute bottom-0 left-0 w-screen h-2/3 px-4 overflow-hidden z-10" >
-          <div className={`relative z-50 w-full h-full ${toggleBtmNav ? "opacity-0 translate-y-full" : "opacity-100"} bg-gray-600 rounded-t-3xl box-border overflow-hidden`} ref={bottomDivRef} style={{transition:".2s"}}>
+        <div
+          className={`sm:hidden absolute bottom-0 left-0 w-screen h-fit px-4 overflow-hidden mb-12 ${
+            toggleBtmNav ? "-z-50" : "z-10"
+          }`}
+        >
+          <div
+            className={`relative w-full h-full ${
+              toggleBtmNav ? "opacity-0 translate-y-full" : "opacity-100"
+            } bg-gray-600 rounded-t-3xl box-border overflow-hidden`}
+            ref={bottomDivRef}
+            style={{ transition: ".2s" }}
+          >
             <div className="w-full h-8 flex items-center justify-center">
               <div className="bg-white w-1/4 h-1 rounded-full"></div>
             </div>
-            <div className="h-full pb-4 w-full bg-gray-600 flex flex-col justify-around relative z-50">
-              {[1, 2, 3, 4, 5, 6,7].map((item) => {
-                return (
-                  <div
-                    className="w-full flex items-center justify-start px-6 gap-4 text-2xl"
-                    key={item}
-                  >
-                    <i className="fa-solid fa-gear text-white"></i>
-                    <Link href="/setting">Setting</Link>
-                  </div>
-                );
-              })}
+            <div className="h-full pb-4 w-full bg-gray-600 flex flex-col justify-center gap-4 pt-2 ">
+              <div
+                className="w-full flex items-center justify-start px-6 gap-4 text-2xl"
+              >
+                <i className="fa-solid fa-gear text-white"></i>
+                <Link href="/setting">Setting</Link>
+              </div>
+              <div
+                className="w-full flex items-center justify-start px-6 gap-4 text-2xl"
+              >
+                <i className="fa-solid fa-info text-sm text-slate-600 border-2 bg-white rounded-full p-2 h-6 w-6 "></i>
+                <Link href="/projectrepo">About</Link>
+              </div>
             </div>
           </div>
         </div>
@@ -87,8 +98,17 @@ export default function MainProfile({ data, section, setData, user, loading }) {
           <div className="w-full h-14 fixed bg-black sm:hidden border-b-2 border-gray-800 top-0 left-0">
             <div className="flex items-center justify-between w-full px-8 h-full">
               <div>{user.username}</div>
-              <div onClick={handleToggleBottomInfo}>
-                <i className="fa-solid fa-bars text-white"></i>
+              <div className="flex gap-4 items-center justify-between">
+                <Link
+                  className="border-2 rounded-full bg-white h-5 w-5 flex items-center justify-center  "
+                  href="/projectrepo"
+                >
+                  <i className="fa-solid fa-info text-sm text-slate-800"></i>
+                </Link>
+                <i
+                  className="fa-solid fa-bars text-white text-lg"
+                  onClick={handleToggleBottomInfo}
+                ></i>
               </div>
             </div>
           </div>

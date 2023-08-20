@@ -34,7 +34,7 @@ export default function SideProfile({session}){
   }, [session?.user.id,localStorage.getItem('userId')]);
     
   return (
-    <div className="h-screen flex flex-col justify-start gap-14 px-8 py-20 fixed border-l-2 border-gray-700">
+    <div className="h-screen flex flex-col justify-start gap-10 px-8 py-12 fixed border-l-2 border-gray-700">
       {!dataLoading ? <div className='flex gap-4 items-center justify-start w-full'>
         <img src={currentUser.image || "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="} alt="d" className='h-16 w-16 rounded-full object-cover'/>
         <span>
@@ -48,6 +48,13 @@ export default function SideProfile({session}){
         {allUsers.slice(0,5).map((user)=>{
             return <UserIds heading="People You May Know" key={user._id} username={user.username} user_image={user.image} userId={user._id} given_name={user.given_name} family_name={user.family_name}/>
         })}</>}
+      </div>
+      <div className='flex items-start justify-center flex-col gap-2'>
+        <div className='w-full flex items-end justify-start gap-2'>
+        <p className='text-sm'>Learn About This Project</p>
+        <Link className='border-2 rounded-full bg-white h-6 w-6 flex items-center justify-center  ' href="/projectrepo"><i className="fa-solid fa-info text-sm text-slate-800"></i></Link>
+        </div>
+      <div className='text-xs text-slate-400'>© 2023 SUFFERER FROM CODENAUTICA</div>
       </div>
     </div>
   )
