@@ -33,7 +33,7 @@ export default function page() {
       setProgress(40);
       const response = await fetch(
         `/api/users/getUser/${
-          session?.user.id || localStorage.getItem("userId")
+          session?.user.id || localStorage.getItem("Sufferer-site-userId")
         }`
       );
       setProgress(80);
@@ -45,7 +45,7 @@ export default function page() {
     // If user is authenticated the fetch details
     if (
       (status === "authenticated" && session?.user.id) ||
-      localStorage.getItem("authToken")
+      localStorage.getItem("Sufferer-site-authToken")
     ) {
       fetchUser();
 
@@ -53,7 +53,7 @@ export default function page() {
     } else if (
       status === "unauthenticated" ||
       status === "" ||
-      localStorage.getItem("authToken")
+      localStorage.getItem("Sufferer-site-authToken")
     ) {
       router.push("/");
     }
@@ -72,7 +72,7 @@ export default function page() {
       />
       <Setting
         user={user}
-        id={session?.user.id || localStorage.getItem("userId")}
+        id={session?.user.id || localStorage.getItem("Sufferer-site-userId")}
         handleLogOut={handleLogOut}
         setProgress={setProgress}
       />

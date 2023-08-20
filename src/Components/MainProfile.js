@@ -31,11 +31,14 @@ export default function MainProfile({ data, section, setData, user, loading }) {
   };
   // Use Effect
   useEffect(() => {
-    if (status === "authenticated" || localStorage.getItem("authToken")) {
+    if (
+      status === "authenticated" ||
+      localStorage.getItem("Sufferer-site-authToken")
+    ) {
       setUserInfo({ followers: user.followers, followings: user.followings });
     } else if (
       status === "unauthenticated" ||
-      localStorage.getItem("authToken")
+      localStorage.getItem("Sufferer-site-authToken")
     ) {
       router.push("/");
     }
@@ -78,15 +81,11 @@ export default function MainProfile({ data, section, setData, user, loading }) {
               <div className="bg-white w-1/4 h-1 rounded-full"></div>
             </div>
             <div className="h-full pb-4 w-full bg-gray-600 flex flex-col justify-center gap-4 pt-2 ">
-              <div
-                className="w-full flex items-center justify-start px-6 gap-4 text-2xl"
-              >
+              <div className="w-full flex items-center justify-start px-6 gap-4 text-2xl">
                 <i className="fa-solid fa-gear text-white"></i>
                 <Link href="/setting">Setting</Link>
               </div>
-              <div
-                className="w-full flex items-center justify-start px-6 gap-4 text-2xl"
-              >
+              <div className="w-full flex items-center justify-start px-6 gap-4 text-2xl">
                 <i className="fa-solid fa-info text-sm text-slate-600 border-2 bg-white rounded-full p-2 h-6 w-6 "></i>
                 <Link href="/projectrepo">About</Link>
               </div>
@@ -175,9 +174,26 @@ export default function MainProfile({ data, section, setData, user, loading }) {
               <strong>
                 {user.given_name} {user.family_name}
               </strong>
-              <p className="w-full sm:h-fit h-20 overflow-auto bg-transparent">
-                {user.about || "Nothing here 😔"}
+              <p className="w-full overflow-auto bg-transparent whitespace-pre-line text-xs ">
+                {user.about}
               </p>
+              {pathname !== "/profile" ? (
+                <>
+                  <div className="mt-4 cursor-pointer flex gap-4 mb-4">
+                    <div
+                      className="p-4 py-1 rounded-lg bg-blue-600 w-fit hover:scale-105 text-sm"
+                      onClick={() => (user.followers.length = 1)}
+                    >
+                      Follow
+                    </div>
+                    <div className="p-4 py-1 rounded-lg bg-slate-700 w-fit hover:scale-105 text-sm">
+                      Message
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>

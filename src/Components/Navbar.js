@@ -1,14 +1,15 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [navToggle, setNavToggle] = useState(false);
+  const router = useRouter();
   const headingRef = useRef(null);
   const openStyle = {
     transition: "1s",
-    width:"100%"
+    width: "100%",
   };
   const closeStyle = {
     transition: ".4s",
@@ -39,7 +40,6 @@ export default function Navbar() {
   useEffect(() => {
     // Add event listener when the component mounts
     document.addEventListener("click", closeNav);
-
     // Clean up the event listener when the component unmounts
     return () => {
       document.removeEventListener("click", closeNav);
@@ -59,6 +59,8 @@ export default function Navbar() {
             href="/"
             className="text-3xl h-full"
             style={{ height: "72px !important" }}
+            onClick={() => router.reload()}
+            
           >
             <i className="fa-solid fa-hippo text-2xl  transition-all duration-250 hover:scale-125"></i>
             <span
@@ -78,11 +80,14 @@ export default function Navbar() {
         >
           <Link
             href="/"
+            replace
             className="text-xl flex items-start justify-start gap-4 h-6 "
+            scroll={false}
           >
             <i className="text-xl fa-solid fa-house"></i>
             <span
-              className={` navigation-items overflow-hidden`} style={navToggle ? openStyle : closeStyle }  
+              className={` navigation-items overflow-hidden`}
+              style={navToggle ? openStyle : closeStyle}
             >
               Home
             </span>
@@ -90,10 +95,13 @@ export default function Navbar() {
           <Link
             href="/search"
             className="text-xl flex items-start justify-start gap-4  h-6 "
+            
+            scroll={false}
           >
             <i className="text-xl fa-solid fa-magnifying-glass"></i>{" "}
             <span
-              className={` navigation-items overflow-hidden`} style={navToggle ? openStyle : closeStyle } 
+              className={` navigation-items overflow-hidden`}
+              style={navToggle ? openStyle : closeStyle}
             >
               Search
             </span>
@@ -101,21 +109,26 @@ export default function Navbar() {
           <Link
             href="/message"
             className="text-xl flex items-start justify-start gap-4 h-6  "
+            scroll={false}
           >
             <i className="text-xl fa-regular fa-message"></i>{" "}
             <span
-              className={` navigation-items overflow-hidden`} style={navToggle ? openStyle : closeStyle } 
+              className={` navigation-items overflow-hidden`}
+              style={navToggle ? openStyle : closeStyle}
             >
               Message
             </span>
           </Link>
           <Link
             href={`/profile`}
+            replace
             className="text-xl flex items-start justify-start gap-4 h-6  "
+            scroll={false}
           >
             <i className="text-xl fa-solid fa-user"></i>{" "}
             <span
-              className={` navigation-items overflow-hidden`} style={navToggle ? openStyle : closeStyle } 
+              className={` navigation-items overflow-hidden`}
+              style={navToggle ? openStyle : closeStyle}
             >
               Profile
             </span>
@@ -128,21 +141,26 @@ export default function Navbar() {
         <Link
           href="/setting"
           className="text-xl flex items-center justify-start gap-4  "
+          scroll={false}
+          replace
         >
-          <i className="fa-solid fa-gear text-3xl"></i>
+          <i className="fa-solid fa-gear text-3xl hover:rotate-45 transition duration-300"></i>
           <span
-            className={` navigation-items overflow-hidden`} style={navToggle ? openStyle : closeStyle } 
+            className={` navigation-items overflow-hidden `}
+            style={navToggle ? openStyle : closeStyle}
           >
             Setting
           </span>
         </Link>
         <Link
           href="createpost"
+          replace
           className="text-xl flex items-center justify-start gap-4  "
         >
-          <i className="fa-solid fa-plus text-3xl "></i>
+          <i className="fa-solid fa-plus text-3xl hover:rotate-90 transition duration-300 "></i>
           <span
-            className={` navigation-items overflow-hidden`} style={navToggle ? openStyle : closeStyle } 
+            className={` navigation-items overflow-hidden`}
+            style={navToggle ? openStyle : closeStyle}
           >
             Post
           </span>
@@ -158,7 +176,8 @@ export default function Navbar() {
             id="toggle-menu"
           ></i>
           <span
-            className={` navigation-items overflow-hidden`} style={navToggle ? openStyle : closeStyle } 
+            className={` navigation-items overflow-hidden`}
+            style={navToggle ? openStyle : closeStyle}
           >
             Close
           </span>

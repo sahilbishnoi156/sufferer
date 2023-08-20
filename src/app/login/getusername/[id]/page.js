@@ -31,7 +31,7 @@ export default function page({ params }) {
         }
       );
       const data = await response.json()
-      localStorage.setItem('authToken',data.authToken)  
+      localStorage.setItem('Sufferer-site-authToken',data.authToken)  
 
       if (response.ok && data.authToken) {
         toast.success(`Welcome ${username}`, {

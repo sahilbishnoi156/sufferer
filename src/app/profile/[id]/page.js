@@ -29,12 +29,12 @@ export default function page({ params }) {
       const User = await response.json();
       setCurrentUser(User);
     };
-    if ((status === "authenticated" && session?.user.id) || localStorage.getItem("authToken")) {
+    if ((status === "authenticated" && session?.user.id) || localStorage.getItem("Sufferer-site-authToken")) {
       setLoading(true)
       fetchPosts();
       fetchUser();
       setLoading(false)
-    } else if (status === "unauthenticated" || status === "" || localStorage.getItem("authToken")) {
+    } else if (status === "unauthenticated" || status === "" || localStorage.getItem("Sufferer-site-authToken")) {
       router.push("/");
     }
   }, [session?.user.id, status]);

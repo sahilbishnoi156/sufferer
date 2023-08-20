@@ -22,7 +22,7 @@ export default function SideProfile({session}){
     
   };
   const fetchCurrentUser = async () => {
-    const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem('userId')}`);
+    const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem('Sufferer-site-userId')}`);
     const user = await response.json();
     setCurrentUser(user);
   };
@@ -31,7 +31,7 @@ export default function SideProfile({session}){
       fetchRelatedUsers();
       fetchCurrentUser();
     }
-  }, [session?.user.id,localStorage.getItem('userId')]);
+  }, [session?.user.id,localStorage.getItem('Sufferer-site-userId')]);
     
   return (
     <div className="h-screen flex flex-col justify-evenly gap-10 px-8 py-12 fixed border-l-2 border-gray-700">
@@ -52,7 +52,7 @@ export default function SideProfile({session}){
       <div className='flex items-start justify-center flex-col gap-2'>
         <div className='w-full flex items-end justify-start gap-2'>
         <p className='text-sm'>Learn About This Project</p>
-        <Link className='border-2 rounded-full bg-white h-6 w-6 flex items-center justify-center  ' href="/projectrepo"><i className="fa-solid fa-info text-sm text-slate-800"></i></Link>
+        <Link className='border-2 rounded-full bg-white h-6 w-6 flex items-center justify-center  ' href="/projectrepo" prefetch={true}><i className="fa-solid fa-info text-sm text-slate-800"></i></Link>
         </div>
       <div className='text-xs text-slate-400'>© 2023 SUFFERER FROM CODENAUTICA</div>
       </div>

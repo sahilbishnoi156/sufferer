@@ -16,23 +16,23 @@ export default function page() {
   useEffect(() => {
     const fetchPosts = async () => {
       setProgress(40)
-      const response = await fetch(`/api/users/${session?.user.id|| localStorage.getItem("userId")}/quotes`);
+      const response = await fetch(`/api/users/${session?.user.id|| localStorage.getItem("Sufferer-site-userId")}/quotes`);
       setProgress(80)
       const data = await response.json();
       setQuotes(data);
       setProgress(100)
     };
     const fetchUser = async () => {
-      const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem("userId")}`);
+      const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem("Sufferer-site-userId")}`);
       const data = await response.json();
       setUser(data);
     };
-    if ((status === "authenticated" && session?.user.id) || localStorage.getItem("authToken")) {
+    if ((status === "authenticated" && session?.user.id) || localStorage.getItem("Sufferer-site-authToken")) {
       setLoading(true)
       fetchPosts();
       fetchUser();
       setLoading(false)
-    } else if (status === "unauthenticated" || status === "" || localStorage.getItem("authToken")) {
+    } else if (status === "unauthenticated" || status === "" || localStorage.getItem("Sufferer-site-authToken")) {
       router.push("/");
     }
   }, [session?.user.id, status]);

@@ -5,6 +5,7 @@ import { signIn, getProviders, useSession } from "next-auth/react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Loading from "./Loading";
 
 export default function Login() {
   const [providers, setProviders] = useState(null);
@@ -18,7 +19,8 @@ export default function Login() {
 
   // Toggle password visibility
   const togglePasswordVisibility = () => {
-    passwordRef.current.type = passwordRef.current.type === "password" ? "text" : "password";
+    passwordRef.current.type =
+      passwordRef.current.type === "password" ? "text" : "password";
   };
 
   useEffect(() => {
@@ -38,13 +40,15 @@ export default function Login() {
       return data;
     };
     const setUpProviders = async () => {
+      setLoading(true);
       const response = await getProviders();
       setProviders(response);
+      setLoading(false);
     };
-    if (localStorage.getItem("authToken")) {
-      router.push("/")
-    }
-    else if (status === "authenticated") {
+    if (localStorage.getItem("Sufferer-site-authToken")) {
+      router.push("/");
+      
+    } else if (status === "authenticated") {
       setLoading(true);
       checkUserName();
     }
@@ -66,7 +70,7 @@ export default function Login() {
           password: user_password,
         }),
       });
-    
+
       const data = await response.json();
       setLoading(false);
       if (!data.userFound) {
@@ -93,8 +97,8 @@ export default function Login() {
             theme: "colored",
           });
         } else {
-          localStorage.setItem("authToken", data.authToken);
-          localStorage.setItem("userId", data.userId);
+          localStorage.setItem("Sufferer-site-authToken", data.authToken);
+          localStorage.setItem("Sufferer-site-userId", data.userId);
 
           toast.success(`Welcome ${data.user_name}`, {
             position: "top-right",
@@ -114,11 +118,14 @@ export default function Login() {
       console.log(error);
     }
   };
+  if (loading) {
+    return <Loading />;
+  }
   const continueWithGoogle = async (id) => {
     setLoading(true);
     try {
       await signIn(id);
-      toast.success(`Please wait we are redirecting you`, {
+      toast.success(`Redirecting 😄`, {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -146,18 +153,22 @@ export default function Login() {
     }, 2000);
   };
   return (
-    <div className="flex sm:flex-row flex-col gap-16 sm:gap-2 w-full h-full text-white items-center justify-start p-6 sm:p-16 bg-black">
-      <div className="sm:w-1/2 w-full flex flex-col items-center sm:justify-start justify-between h-full gap-8 sm:mr-24">
-        <div className="flex flex-col items-center justify-start sm:h-1/4 h-full sm:mt-32 gap-2 sm:gap-0">
-          <span className="text-6xl text-center" id="site-heading">
-            Welcome Back!
-          </span>
-          <p className="text-gray-400 text-center">
-            At Sufferer, we believe in the extraordinary power of quotes to
-            inspire, motivate, and uplift.
-          </p>
+    <div className="flex sm:flex-row flex-col-reverse gap-16 sm:gap-2 w-full h-full text-white items-center justify-start p-6 sm:p-16 bg-black">
+      <div className="sm:w-2/5 w-full flex flex-col items-center sm:justify-center justify-between h-full gap-8  ">
+        <div className="flex-col items-center justify-center gap-16 sm:gap-0 sm:flex hidden">
+          <div className="w-full text-center">
+            <span className="text-6xl text-center w-3/4" id="site-heading">
+              Welcome Back!
+            </span>
+            <p className="text-gray-400 text-center">
+              At Sufferer, we believe in the extraordinary power of quotes to
+              inspire, motivate, and uplift.
+            </p>
+              <div className="h-12"></div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="text-slate-400 sm:hidden block">----------OR----------</div>
+        <div className="flex flex-col gap-4 w-full ">
           {providers &&
             Object.values(providers).map((provider) => (
               <button
@@ -166,7 +177,7 @@ export default function Login() {
                 onClick={() => {
                   continueWithGoogle(provider.id);
                 }}
-                className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55"
+                className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 justify-center"
               >
                 <svg
                   className="w-4 h-4 mr-2"
@@ -189,7 +200,7 @@ export default function Login() {
             ))}
           <button
             type="button"
-            className="text-white bg-[#1da1f2] hover:bg-[#1da1f2]/90 focus:ring-4 focus:outline-none focus:ring-[#1da1f2]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#1da1f2]/55"
+            className="text-white bg-[#1da1f2] hover:bg-[#1da1f2]/90 focus:ring-4 focus:outline-none focus:ring-[#1da1f2]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#1da1f2]/55 justify-center"
           >
             <svg
               className="w-4 h-4 mr-2"
@@ -208,7 +219,7 @@ export default function Login() {
           </button>
           <button
             type="button"
-            className="text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-3 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 w-48"
+            className="text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-3 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 w-full justify-center"
           >
             <svg
               className="w-4 h-4 mr-2"
@@ -226,11 +237,12 @@ export default function Login() {
             Sign in with Facebook
           </button>
         </div>
-        <Link className="text-blue-400" href="/register">
+        <Link className="text-blue-400 sm:block hidden  " href="/register">
           Don't have an account ?
         </Link>
       </div>
-      <div className="h-full w-full flex flex-col items-center justify-center sm:border-l-2 border-gray-600 sm:gap-16 gap-4">
+      <div className="text-slate-400 [writing-mode:vertical-lr] relative left-14 sm:block hidden">-----------------OR-----------------</div>
+      <div className="h-full sm:w-3/5 w-full flex flex-col items-center justify-center sm:gap-16 gap-4 sm:mt-0 mt-10 ">
         <div className="w-full items-center justify-center flex">
           <span className="text-6xl" id="site-heading">
             LOGIN
@@ -286,7 +298,7 @@ export default function Login() {
                 type="checkbox"
                 defaultValue=""
                 onChange={togglePasswordVisibility}
-                onBlur={()=>passwordRef.current.type === "password"}
+                onBlur={() => passwordRef.current.type === "password"}
                 className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
               />
             </div>
@@ -334,7 +346,11 @@ export default function Login() {
             >
               Log In
             </button>
+            
           )}
+          <Link className="text-blue-400 sm:hidden block mt-4" href="/register">
+          Don't have an account ?
+        </Link>
         </form>
       </div>
     </div>

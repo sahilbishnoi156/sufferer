@@ -20,7 +20,7 @@ export default function create() {
         method: "POST",
         body: JSON.stringify({
           quote: post.quote,
-          userId: session?.user.id || localStorage.getItem("userId"),
+          userId: session?.user.id || localStorage.getItem("Sufferer-site-userId"),
           title: post.title,
         }),
       });
@@ -45,7 +45,7 @@ export default function create() {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("authToken")) {
+    if (localStorage.getItem("Sufferer-site-authToken")) {
       
     }
     else if (!session?.user.id || status === "unauthenticated") {

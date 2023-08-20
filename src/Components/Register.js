@@ -43,8 +43,8 @@ export default function Login() {
       const json = await response.json();
       setLoading(false)
       if (json.userCreated) {
-        localStorage.setItem("authToken", json.authToken);
-        localStorage.setItem("userId", json.newUser._id);
+        localStorage.setItem("Sufferer-site-authToken", json.authToken);
+        localStorage.setItem("Sufferer-site-userId", json.newUser._id);
         toast.success(`Welcome ${firstName} `, {
           position: "top-right",
           autoClose: 3000,
@@ -128,7 +128,7 @@ export default function Login() {
 
   // UseEffect
   useEffect(() => {
-    if (status === "authenticated" || localStorage.getItem("authToken")) {
+    if (status === "authenticated" || localStorage.getItem("Sufferer-site-authToken")) {
       router.push("/");
     }
   }, [status,loadComponent]);
