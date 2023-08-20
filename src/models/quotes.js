@@ -21,4 +21,4 @@ const QuoteSchema = new Schema({
 QuoteSchema.set('toJSON', { getters: true, virtuals: false, minimize: false });
 const Quote = models.Quote || model('Quote', QuoteSchema);
 
-export default Quote;
+export default Quote; 
