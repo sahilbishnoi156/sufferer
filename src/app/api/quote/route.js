@@ -12,6 +12,7 @@ export const GET = async (request) => {
     const totalQuotes = quotes.length;
     return new Response(JSON.stringify({quotes:quotes.slice(sLimit, eLimit), totalQuotes}), { status: 200 });
   } catch (error) {
+    console.log(error)
     return new Response("Failed to get quotes", { status: 500 });
   }
 };
