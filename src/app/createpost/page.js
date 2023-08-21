@@ -30,6 +30,7 @@ export default function create() {
         }
       );
       const imageJsonData = await ImageResponse.json();
+      var usrCldImage = imageJsonData.url;
       setPost({...post, image:imageJsonData.url});
     }
 
@@ -40,7 +41,7 @@ export default function create() {
           caption: post.caption,
           userId:
             session?.user.id || localStorage.getItem("Sufferer-site-userId"),
-          image: post.image,
+          image: usrCldImage || post.image,
         }),
       });
       if (response.ok) {
