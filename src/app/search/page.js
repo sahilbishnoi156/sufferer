@@ -1,12 +1,17 @@
 "use client";
 import Search from "@/Components/Search";
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import Skeleton from "../../Components/Skeleton";
 import UserIds from "../../Components/UserIds";
 import LoadingBar from "react-top-loading-bar";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function page() {
   const [dataLoading, setDataLoading] = useState(false);
+  const {data:session} = useSession();
+  const router = useRouter();
   const [allUsers, setUsers] = useState([]);
   const [progress, setProgress] = useState(0)
   const [searchProg, setSearchProg] = useState(false);
@@ -27,6 +32,19 @@ export default function page() {
     }
   };
   useEffect(() => {
+    if (!session?.user.id) {
+      router.push(`/login/getusername/${session?.user.id || localStorage.getItem('Sufferer-site-userId')}`)
+      toast.error(`Permission Denied`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      })
+    return};
     fetchUsers();
   }, []);
   return (

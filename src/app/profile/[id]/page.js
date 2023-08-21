@@ -51,6 +51,7 @@ export default function page({ params }) {
             onLoaderFinished={() => setProgress(0)}
       />
       <MainProfile
+      setProgress={setProgress}
         user={currentUser}
         data={quotes}
         section={`${userName}'s`}

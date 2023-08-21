@@ -52,6 +52,7 @@ export default function page() {
       />
       <MainProfile
         user={user}
+        setProgress={setProgress}
         section={"My"}
         data={quotes}
         setData={setQuotes}

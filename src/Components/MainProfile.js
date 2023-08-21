@@ -1,6 +1,7 @@
 "use client";
 import "../styles/profile.css";
 import Quotes from "@/Components/Quotes";
+import { toast } from "react-toastify";
 import Loading from "../Components/Loading";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -8,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function MainProfile({ data, section, setData, user, loading }) {
+export default function MainProfile({ data, section, setData, user, loading, setProgress }) {
   // States
   const [UserInfo, setUserInfo] = useState({
     followers: [],
@@ -22,7 +23,7 @@ export default function MainProfile({ data, section, setData, user, loading }) {
   const bottomDivRef = useRef();
 
   // Hooks
-  const { status } = useSession();
+  const { status, data:session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -120,6 +121,8 @@ export default function MainProfile({ data, section, setData, user, loading }) {
             <div className="border-2 rounded-full border-gray-500 p-1 w-fit ">
               <img
                 src={user.image}
+                onLoad={()=>setProgress(100)}
+                onLoadStart={()=>{setProgress(60)}}
                 alt="notfound"
                 className="sm:h-40 sm:w-40 h-16 w-16 rounded-full object-cover cursor-pointer"
                 onClick={() => setImageClick(true)}

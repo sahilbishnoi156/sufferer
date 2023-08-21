@@ -216,7 +216,7 @@ export default function QuoteItem({
         </div>
       )}
       <div className="w-full px-4">
-        <div className="mt-2 flex justify-between items-center w-full px-2 sm:px-4 text-xs ">
+        <div className="mt-2 flex justify-between items-center w-full text-xs ">
           <p className="flex gap-1 items-center justify-center">
             <i className="fa-solid fa-heart"></i>0
           </p>
@@ -229,8 +229,8 @@ export default function QuoteItem({
             </p>
           </div>
         </div>
-        <div className="w-full h-[1px] bg-slate-500 self-center mt-2 "></div>
-        <div className="flex items-center justify-start px-2 sm:px-4 gap-4 w-full py-2 sm:py-4">
+        <div className="w-full h-[1px] bg-slate-500 self-center mt-2"></div>
+        <div className="flex items-center justify-start gap-4 w-full py-2 sm:py-4">
           <div className="flex flex-col items-center justify-center">
             <i
               className={`fa-${

@@ -3,10 +3,13 @@ import {useEffect,useState} from 'react'
 import UserIds from './UserIds'
 import Link from 'next/link';
 import Skeleton from './Skeleton';
+import { toast } from "react-toastify";
+import { useRouter } from 'next/navigation';
 
 export default function SideProfile({session}){
     const [dataLoading, setDataLoading] = useState(false)
     const [allUsers, setUsers] = useState([]);
+    const router = useRouter();
     const [currentUser, setCurrentUser] = useState({})
 
   const fetchRelatedUsers = async () => {
@@ -27,6 +30,19 @@ export default function SideProfile({session}){
     setCurrentUser(user);
   };
   useEffect(() => {
+    if (currentUser.username === "") {
+      router.push(`/login/getusername/${session?.user.id || localStorage.getItem('Sufferer-site-userId')}`)
+      toast.error(`Permission Denied`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
     if (window.innerWidth > 640 ) {
       fetchRelatedUsers();
       fetchCurrentUser();

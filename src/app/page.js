@@ -5,7 +5,7 @@ import Home from "@/Components/Home";
 import { useEffect, useState } from "react";
 
 export default function page() {
-  const { status } = useSession();
+  const { status, data:session } = useSession();
   const [userLogged, setUserLogged] = useState(false)
   useEffect(() => {
     // Perform client-side check for localStorage
@@ -14,7 +14,7 @@ export default function page() {
   }, []);
   return (
     <div id="quote-area" className="w-full">
-      {status === "authenticated" || status === "loading" || userLogged ? <Home /> : <Jumbotron />}
+      {status === "authenticated" || status === "loading" || userLogged  ? <Home /> : <Jumbotron />}
     </div>
   );
 }

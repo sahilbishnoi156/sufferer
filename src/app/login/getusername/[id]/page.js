@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 export default function page({ params }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { data: session, status } = useSession();
   // Ref
   const timerRef = useRef(null);
@@ -30,8 +31,8 @@ export default function page({ params }) {
           }),
         }
       );
-      const data = await response.json()
-      localStorage.setItem('Sufferer-site-authToken',data.authToken)  
+      const data = await response.json();
+      localStorage.setItem("Sufferer-site-authToken", data.authToken);
 
       if (response.ok && data.authToken) {
         toast.success(`Welcome ${username}`, {
@@ -69,7 +70,7 @@ export default function page({ params }) {
       const response = await fetch(
         `/api/users/checkusername/byusername/${username}`
       );
-      const data = await response.json()
+      const data = await response.json();
       if (data.foundUsername) {
         setUsernameExists(true); // Username exist
       } else {
@@ -83,9 +84,7 @@ export default function page({ params }) {
   // Handling username change
   const handleUserNameChange = (e) => {
     const newUsername = e.target.value.toLowerCase();
-    if (
-      /[^a-z0-9._]|[.]{2,}|[_]{2,}/gm.test(newUsername)
-    ) {
+    if (/[^a-z0-9._]|[.]{2,}|[_]{2,}/gm.test(newUsername)) {
       // Don't set the username
     } else {
       setUsername(newUsername);
@@ -103,8 +102,20 @@ export default function page({ params }) {
       setUsernameExists(null);
     }
   };
-
   useEffect(() => {
+    if (session?.user.id) {
+      router.push(`/`)
+      toast.error(`Permission Denied`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
     if (status === "unauthenticated" || session?.user.id !== params.id) {
       setLoading(true);
       toast.warn(`Permission denied`, {
@@ -129,15 +140,35 @@ export default function page({ params }) {
         className="w-1/2 h-full flex items-center justify-center flex-col gap-16"
         onSubmit={handleLoginSubmit}
       >
-        <h1 className="w-full text-start text-white">
-          Enter Password To Continue
-        </h1>
+        <div className="flex items-center justify-center flex-col w-full">
+          <div className="flex items-center justify-center gap-16 ">
+            <img
+              src={session?.user.image}
+              alt="Not found"
+              className="h-40 w-40 rounded-full"
+            />
+            <div>
+              <div className="text-white">
+                Hi{" "}
+                <span className="text-2xl text-orange-500">
+                  {" "}
+                  {session?.user.name}
+                </span>
+              </div>
+              <div className="text-white">Welcome to our community</div>
+            </div>
+          </div>
+          <h1 className="w-full text-center mt-10 text-2xl text-white select-none">
+            Give us some details to give you{" "}
+            <span className="text-orange-500">better experience</span>
+          </h1>
+        </div>
         <div className=" w-full">
           <label
             htmlFor="username"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Username  (must contain 5 characters)
+            Username (must contain 5 characters)
           </label>
           <input
             type="text"
@@ -151,18 +182,16 @@ export default function page({ params }) {
             required
           />
           <div>
-        {usernameExists === null ? (
+            {usernameExists === null ? (
               <></>
-            ): usernameExists ? (
+            ) : usernameExists ? (
               <p className="text-sm mt-1 text-red-700">
                 Username already taken
               </p>
             ) : (
-              <p className="text-sm mt-1 text-green-700">
-                Username available
-              </p>
+              <p className="text-sm mt-1 text-green-700">Username available</p>
             )}
-            </div>
+          </div>
         </div>
         <div className="mb-6 w-full">
           <label
@@ -172,7 +201,7 @@ export default function page({ params }) {
             Password
           </label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"} // Toggle between "text" and "password"
             id="password"
             value={password}
             max={8}
@@ -181,14 +210,32 @@ export default function page({ params }) {
             placeholder="Choose a password"
             required
           />
+
+          <input
+            type="checkbox"
+            id="show-password-check"
+            className="mt-4"
+            checked={showPassword}
+            onChange={() => setShowPassword(!showPassword)}
+          />
+          <label
+            className="text-white cursor-pointer"
+            htmlFor="show-password-check"
+          >
+            Show password
+          </label>
         </div>
         <button
-                type="submit"
-                disabled={usernameExists || username === ""  || username.length < 6}
-                className={`text-white focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2  ${usernameExists || username === "" || username.length < 6 ? "bg-gray-700" : "bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:bg-blue-800"}`}
-              >
-                proceed
-              </button>
+          type="submit"
+          disabled={usernameExists || username === "" || username.length < 6}
+          className={`text-white focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2  ${
+            usernameExists || username === "" || username.length < 6
+              ? "bg-gray-700"
+              : "bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:bg-blue-800"
+          }`}
+        >
+          proceed
+        </button>
       </form>
     </div>
   );

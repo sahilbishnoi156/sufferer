@@ -118,7 +118,7 @@ export default function Login() {
       console.log(error);
     }
   };
-  if (loading) {
+  if (status === "loading" || loading) {
     return <Loading />;
   }
   const continueWithGoogle = async (id) => {
@@ -153,7 +153,7 @@ export default function Login() {
     }, 2000);
   };
   return (
-    <div className="flex sm:flex-row flex-col-reverse gap-16 sm:gap-2 w-full h-full text-white items-center justify-start p-6 sm:p-16 bg-black">
+    <div className="flex sm:flex-row flex-col-reverse gap-16 sm:gap-2 w-full h-screen text-white items-center justify-start p-6 sm:p-16 bg-black">
       <div className="sm:w-2/5 w-full flex flex-col items-center sm:justify-center justify-between h-full gap-8  ">
         <div className="flex-col items-center justify-center gap-16 sm:gap-0 sm:flex hidden">
           <div className="w-full text-center">
@@ -242,7 +242,7 @@ export default function Login() {
         </Link>
       </div>
       <div className="text-slate-400 [writing-mode:vertical-lr] relative left-14 sm:block hidden">-----------------OR-----------------</div>
-      <div className="h-full sm:w-3/5 w-full flex flex-col items-center justify-center sm:gap-16 gap-4 sm:mt-0 mt-10 ">
+      <div className="h-full sm:w-3/5  w-full flex flex-col items-center justify-center sm:gap-16 gap-4 sm:mt-0 mt-10 ">
         <div className="w-full items-center justify-center flex">
           <span className="text-6xl" id="site-heading">
             LOGIN
