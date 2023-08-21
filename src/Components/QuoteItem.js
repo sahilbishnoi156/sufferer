@@ -24,7 +24,7 @@ export default function QuoteItem({
     const hasConfirmed = confirm(`Do your really want to delete ${title}`);
 
     if (hasConfirmed) {
-      toast.info(`${title} Deleted`, {
+      toast.info(`Post Deleted`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -44,7 +44,7 @@ export default function QuoteItem({
         console.log(error);
       }
     } else {
-      toast.info(`${title} is Safe`, {
+      toast.info(`Your Post Is Safe`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -93,7 +93,7 @@ export default function QuoteItem({
   }, [date, post]);
   return (
     <div
-      className="text-white sm:w-3/4 w-full h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between "
+      className="text-white sm:w-3/4 w-full h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between  "
       id={id}
     >
       <div className="w-full h-fit p-2 sm:p-4">
@@ -118,10 +118,12 @@ export default function QuoteItem({
             </span>
           </div>
           <div className="flex gap-6 items-center justify-center">
-            <i
-              className="fa-solid fa-ellipsis-vertical fa-rotate-90 mr-2 cursor-pointer"
+            <div
+              className="w-8 h-8 flex items-center justify-center cursor-pointer"
               onClick={() => setTogglePostInfo(true)}
-            ></i>
+            >
+              <i className="fa-solid fa-ellipsis-vertical fa-rotate-90 mr-2 cursor-pointer"></i>
+            </div>
             {togglePostInfo && (
               <div
                 className="h-screen w-screen backdrop-blur-lg flex items-center justify-center fixed top-0 left-0 z-50"
@@ -147,7 +149,7 @@ export default function QuoteItem({
                         <>
                           <li>
                             <p
-                              className="block px-4 py-2 hover:rotate-2"
+                              className="block px-4 py-2 hover:rotate-2 cursor-pointer"
                               onClick={handleEditClick}
                             >
                               <i className="fa-solid fa-pen-to-square cursor-pointer mr-2"></i>
@@ -158,7 +160,7 @@ export default function QuoteItem({
                           <li>
                             <p
                               onClick={handleDelete}
-                              className="block px-4 py-2 hover:rotate-2"
+                              className="block px-4 py-2 hover:rotate-2 cursor-pointer"
                             >
                               <i className="fa-solid fa-trash cursor-pointer mr-2"></i>
                               Delete Post
@@ -207,12 +209,14 @@ export default function QuoteItem({
         </p>
       </div>
       {post.image && (
-        <div className="w-full h-full mt-2">
-          <img
-            src={post.image}
-            alt="Not found"
-            className="w-full h-1/2 object-contain"
-          />
+        <div className="w-full h-96 mt-2 relative overflow-hidden">
+          <div className=" h-full w-full p-4">
+            <img
+              src={post.image}
+              alt="Not found"
+              className="w-full h-full object-cover  rounded-sm"
+            />
+          </div>
         </div>
       )}
       <div className="w-full px-4">

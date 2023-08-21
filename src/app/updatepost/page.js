@@ -33,8 +33,7 @@ export default function page() {
   const updateQuote = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    if (!imageUrl) {
+    if (imageUrl) {
       const formData = new FormData();
       formData.append("file", imageUrl);
       formData.append("upload_preset", "gmgscbus");
@@ -46,6 +45,7 @@ export default function page() {
         }
       );
       const imageJsonData = await ImageResponse.json();
+      var usrCldImage = imageJsonData.url;
       setPost({...post, image:imageJsonData.url});
     }
 
@@ -56,10 +56,9 @@ export default function page() {
         method: "PATCH",
         body: JSON.stringify({
           caption: post.caption,
-          image: post.image,
+          image: usrCldImage || post.image,
         }),
       });
-
       if (response.ok) {
         toast.success("Updated Successfully", {
           position: "top-right",
@@ -90,7 +89,7 @@ export default function page() {
     }
   };
   return (
-    <div className="w-screen h-full flex items-center justify-center flex-col">
+    <div className="w-screen h-full flex items-center justify-center flex-col my-16">
       <h1 className="text-4xl font-bold text-start w-3/4 h-full text-white mb-16">
         Edit Quote
       </h1>

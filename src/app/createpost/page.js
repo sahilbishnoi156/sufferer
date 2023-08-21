@@ -18,7 +18,7 @@ export default function create() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (!imageUrl) {
+    if (imageUrl) {
       const formData = new FormData();
       formData.append("file", imageUrl);
       formData.append("upload_preset", "gmgscbus");
