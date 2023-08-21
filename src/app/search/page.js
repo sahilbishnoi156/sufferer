@@ -23,7 +23,7 @@ export default function page() {
       setDataLoading(false);
       setProgress(100)
     } catch (error) {
-      console.log("failed to get quotes", error);
+      console.log("failed to get Users", error);
     }
   };
   useEffect(() => {

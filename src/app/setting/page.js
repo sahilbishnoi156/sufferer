@@ -5,7 +5,6 @@ import Loading from "@/Components/Loading";
 import { useRouter } from "next/navigation";
 import LoadingBar from "react-top-loading-bar";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 export default function page() {
   // Getting session

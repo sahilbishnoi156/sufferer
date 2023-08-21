@@ -1,4 +1,4 @@
-import Quote from "../../../models/quotes";
+import Post from "../../../models/post";
 import { connectToDB } from "../../../utils/database";
 
 export const GET = async (request) => {
@@ -8,11 +8,11 @@ export const GET = async (request) => {
   const eLimit = searchParams.get("eLimit") || 4;
   try {
     await connectToDB();
-    const quotes = await Quote.find({}).populate("creator");
-    const totalQuotes = quotes.length;
-    return new Response(JSON.stringify({quotes:quotes.slice(sLimit, eLimit), totalQuotes}), { status: 200 });
+    const allPosts = await Post.find({}).populate("creator");
+    const totalPosts = allPosts.length;
+    return new Response(JSON.stringify({posts:allPosts.slice(sLimit, eLimit), totalPosts}), { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Failed to get quotes", errorMessage: error.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Failed to get posts", errorMessage: error.message }), { status: 500 });
 
   }
 };

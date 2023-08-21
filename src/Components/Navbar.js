@@ -59,7 +59,6 @@ export default function Navbar() {
             href="/"
             className="text-3xl h-full"
             style={{ height: "72px !important" }}
-            onClick={() => router.reload()}
             
           >
             <i className="fa-solid fa-hippo text-2xl  transition-all duration-250 hover:scale-125"></i>

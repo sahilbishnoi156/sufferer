@@ -41,7 +41,7 @@ export default function RootLayout({ children }) {
               pauseOnHover={false}
               theme="colored"
             />
-            <div className="w-full">{children}</div>
+            <div className="w-full h-full">{children}</div>
           </div>
           <script src="https://cdn.tailwindcss.com"></script>
           <script

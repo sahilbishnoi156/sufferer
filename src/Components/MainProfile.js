@@ -15,6 +15,7 @@ export default function MainProfile({ data, section, setData, user, loading }) {
     followings: [],
   });
   const [toggleBtmNav, setToggleBtmNav] = useState(true);
+  const [imageClick, setImageClick] = useState(false);
 
   // Ref
   const profileNavRef = useRef();
@@ -43,6 +44,7 @@ export default function MainProfile({ data, section, setData, user, loading }) {
       router.push("/");
     }
     // Profile navigation
+
     profileNavRef.current.addEventListener("click", (e) => {
       const button = e.target.closest("div");
       if (!button) return;
@@ -64,7 +66,7 @@ export default function MainProfile({ data, section, setData, user, loading }) {
   }
   return (
     <>
-      <div className="w-5/6 h-full text-white flex flex-col justify-center items-center gap-2">
+      <div className="sm:w-5/6 lg:w-5/6 xl:5/6 w-full h-full text-white flex flex-col justify-center items-center gap-2 px-4">
         <div
           className={`sm:hidden absolute bottom-0 left-0 w-screen h-fit px-4 overflow-hidden mb-12 ${
             toggleBtmNav ? "-z-50" : "z-10"
@@ -94,7 +96,7 @@ export default function MainProfile({ data, section, setData, user, loading }) {
         </div>
         {/* mobile navigation */}
         <div className="w-full h-14 sm:hidden block">
-          <div className="w-full h-14 fixed bg-black sm:hidden border-b-2 border-gray-800 top-0 left-0">
+          <div className="w-full h-14 fixed backdrop-blur-lg sm:hidden border-b-2 border-gray-800 top-0 left-0 z-50">
             <div className="flex items-center justify-between w-full px-8 h-full">
               <div>{user.username}</div>
               <div className="flex gap-4 items-center justify-between">
@@ -112,18 +114,38 @@ export default function MainProfile({ data, section, setData, user, loading }) {
             </div>
           </div>
         </div>
-        <div className="h-fit border-b-2 border-l-indigo-700 w-full flex flex-col sm:flex-row gap-4 justify-evenly pt-8 sm:pb-10 border-gray-700">
+        <div className="h-fit border-b-2 border-l-indigo-700 w-full flex flex-col sm:flex-row gap-4 justify-evenly pt-8 sm:pb-10 pb-2 border-gray-700">
           <div className="flex gap-4 items-center justify-center w-fit">
             {/* common image for mobile & desktop */}
             <div className="border-2 rounded-full border-gray-500 p-1 w-fit ">
               <img
                 src={user.image}
-                alt="d"
-                className="sm:h-40 sm:w-40 h-16 w-16 rounded-full object-cover"
+                alt="notfound"
+                className="sm:h-40 sm:w-40 h-16 w-16 rounded-full object-cover cursor-pointer"
+                onClick={() => setImageClick(true)}
               />
             </div>
+            {/* view image  */}
+            {imageClick ? (
+              <div
+                className="h-screen w-screen backdrop-blur-lg flex items-center justify-center fixed top-0 left-0 z-50"
+                onClick={() => setImageClick(false)}
+              >
+                <div className="h-52 w-52 lg:h-96 lg:w-96 rounded-full p-3 relative">
+                  <div className="h-full w-full rounded-full absolute -top-3 -left-3 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-spin"></div>
+                  <div className="h-full w-full rounded-full absolute top-8 left-8 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-spin"></div>
+                    <img
+                      src={user.image}
+                      alt="not found"
+                      className="h-full w-full rounded-full object-cover absolute hover:scale-105 transition duration-300 "
+                    />
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
             {/* For Mobile Profile */}
-            <div className="flex flex-col gap-2 sm:hidden justify-center items-start">
+            <div className="flex flex-col gap-2 sm:hidden justify-center items-start text-sm">
               <div className="flex gap-6 items-center">
                 <div>@{user.username}</div>
                 {pathname === "/profile" ? (
@@ -197,21 +219,25 @@ export default function MainProfile({ data, section, setData, user, loading }) {
             </div>
           </div>
         </div>
-        <div
-          id="profile-navigation"
-          className="flex gap-8 w-fit items-center justify-center relative z-50"
-          ref={profileNavRef}
-        >
-          {pathname === "/profile" ? (
-            <>
-              <div>Quotes</div>
-              <div>Saved</div>
-              <div>Discard</div>
-            </>
-          ) : (
-            <></>
-          )}
-        </div>
+        {pathname === "/profile" ? (
+          <div
+            id="profile-navigation"
+            className="flex gap-8 w-fit items-center justify-center relative z-50"
+            ref={profileNavRef}
+          >
+            <div>Quotes</div>
+            <div>Saved</div>
+            <div>Discard</div>
+          </div>
+        ) : (
+          <div
+            id="profile-navigation"
+            className="flex gap-8 w-fit items-center justify-center relative z-50 before:w-56"
+            ref={profileNavRef}
+          >
+            <div>Quotes</div>
+          </div>
+        )}
         <div className="w-full mb-10">
           <div className="">
             <Quotes posts={data} section={section} setData={setData} />

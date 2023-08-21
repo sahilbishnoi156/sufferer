@@ -22,8 +22,9 @@
   transform-origin: left;
   border-radius: 200%;
 }
-@media only screen and (max-width: 425px) {
-  /* #profile-navigation{
-    background-color: lightblue;
-  } */
+@media only screen and (max-width: 1200px) {
+  #quote-area{
+    flex-direction:  column;
+    align-items: center;
+  }
 }
