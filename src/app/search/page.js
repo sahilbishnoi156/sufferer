@@ -32,19 +32,6 @@ export default function page() {
     }
   };
   useEffect(() => {
-    if (!session?.user.id) {
-      router.push(`/login/getusername/${session?.user.id || localStorage.getItem('Sufferer-site-userId')}`)
-      toast.error(`Permission Denied`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      })
-    return};
     fetchUsers();
   }, []);
   return (
