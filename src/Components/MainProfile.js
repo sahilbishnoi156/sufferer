@@ -1,7 +1,6 @@
 "use client";
 import "../styles/profile.css";
 import Quotes from "@/Components/Quotes";
-import { toast } from "react-toastify";
 import Loading from "../Components/Loading";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -9,7 +8,15 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function MainProfile({ data, section, setData, user, loading, setProgress }) {
+export default function MainProfile({
+  data,
+  section,
+  setData,
+  user,
+  loading,
+  setProgress,
+  handleFollowUser,
+}) {
   // States
   const [UserInfo, setUserInfo] = useState({
     followers: [],
@@ -17,13 +24,14 @@ export default function MainProfile({ data, section, setData, user, loading, set
   });
   const [toggleBtmNav, setToggleBtmNav] = useState(true);
   const [imageClick, setImageClick] = useState(false);
+  const [followClicked, setFollowClicked] = useState(false);
 
   // Ref
   const profileNavRef = useRef();
   const bottomDivRef = useRef();
 
   // Hooks
-  const { status, data:session } = useSession();
+  const { status, data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -121,8 +129,10 @@ export default function MainProfile({ data, section, setData, user, loading, set
             <div className="border-2 rounded-full border-gray-500 p-1 w-fit ">
               <img
                 src={user.image}
-                onLoad={()=>setProgress(100)}
-                onLoadStart={()=>{setProgress(60)}}
+                onLoad={() => setProgress(100)}
+                onLoadStart={() => {
+                  setProgress(60);
+                }}
                 alt="notfound"
                 className="sm:h-40 sm:w-40 h-16 w-16 rounded-full object-cover cursor-pointer"
                 onClick={() => setImageClick(true)}
@@ -137,11 +147,11 @@ export default function MainProfile({ data, section, setData, user, loading, set
                 <div className="h-52 w-52 lg:h-96 lg:w-96 rounded-full p-3 relative">
                   <div className="h-full w-full rounded-full absolute -top-3 -left-3 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-spin"></div>
                   <div className="h-full w-full rounded-full absolute top-8 left-8 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-spin"></div>
-                    <img
-                      src={user.image}
-                      alt="not found"
-                      className="h-full w-full rounded-full object-cover absolute hover:scale-105 transition duration-300 "
-                    />
+                  <img
+                    src={user.image}
+                    alt="not found"
+                    className="h-full w-full rounded-full object-cover absolute hover:scale-105 transition duration-300 "
+                  />
                 </div>
               </div>
             ) : (
@@ -164,8 +174,12 @@ export default function MainProfile({ data, section, setData, user, loading, set
               </div>
               <div className="flex sm:gap-8 gap-2 text-center text-xs">
                 <div>{data.length} Quotes</div>
-                <div>0 Followers</div>
-                <div>0 Followings</div>
+                <div>
+                  {UserInfo.followers && UserInfo.followers.length} Followers
+                </div>
+                <div>
+                  {UserInfo.followers && UserInfo.followings.length} Followings
+                </div>
               </div>
             </div>
           </div>
@@ -202,22 +216,44 @@ export default function MainProfile({ data, section, setData, user, loading, set
               <p className="w-full overflow-auto bg-transparent whitespace-pre-line text-xs ">
                 {user.about}
               </p>
-              {pathname !== "/profile" ? (
-                <>
-                  <div className="mt-4 cursor-pointer flex gap-4 mb-4">
-                    <div
-                      className="p-4 py-1 rounded-lg bg-blue-600 w-fit hover:scale-105 text-sm"
-                      onClick={() => (user.followers.length = 1)}
-                    >
-                      Follow
-                    </div>
-                    <div className="p-4 py-1 rounded-lg bg-slate-700 w-fit hover:scale-105 text-sm">
-                      Message
-                    </div>
+              {pathname === "/profile" ? null : (
+                <div className="mt-4 flex gap-4 mb-4">
+                  <button
+                    type="button"
+                    className={`${
+                      followClicked ||
+                      (UserInfo.followers &&
+                        (UserInfo.followers.includes(
+                          session?.user.id ||
+                            localStorage.getItem("Sufferer-site-userId")
+                        )))
+                        ? "bg-slate-700"
+                        : "bg-blue-600 hover:scale-105 cursor-pointer"
+                    } w-fit text-sm p-4 py-1 rounded-lg  `}
+                    onClick={async () => {
+                      handleFollowUser();
+                      setFollowClicked(!followClicked);
+                      setUserInfo((prevUserInfo) => {
+                        const updatedFollowers =
+                          prevUserInfo.followers.includes("Temp value")
+                            ? prevUserInfo.followers.filter(
+                                (item) => item !== "Temp value"
+                              )
+                            : prevUserInfo.followers.concat(["Temp value"]);
+
+                        return {
+                          ...prevUserInfo,
+                          followers: updatedFollowers,
+                        };
+                      });
+                    }}
+                  >
+                    Follow
+                  </button>
+                  <div className="p-4 py-1 cursor-pointer rounded-lg bg-slate-700 w-fit hover:scale-105 text-sm">
+                    Message
                   </div>
-                </>
-              ) : (
-                <></>
+                </div>
               )}
             </div>
           </div>
