@@ -103,19 +103,6 @@ export default function page({ params }) {
     }
   };
   useEffect(() => {
-    if (session?.user.id) {
-      router.push(`/`)
-      toast.error(`Permission Denied`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
     if (status === "unauthenticated" || session?.user.id !== params.id) {
       setLoading(true);
       toast.warn(`Permission denied`, {
