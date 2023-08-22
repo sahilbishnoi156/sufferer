@@ -25,7 +25,7 @@ export default function Home() {
       setProgress(50);
       const data = await response.json();
       setDataLoading(false);
-      setAllPosts(data.posts.reverse());
+      setAllPosts(data.posts);
       setHasMoreData(data.totalPosts > dataLimit);
       setProgress(100);
       return data;
@@ -43,7 +43,7 @@ export default function Home() {
     );
     const data = await response.json();
     if (data.posts.length > 0) {
-      setAllPosts((prevPosts) => [...prevPosts, ...data.posts.reverse()]);
+      setAllPosts((prevPosts) => [...prevPosts, ...data.posts]);
       setDataLimit(newEndLimit);
     } else {
       setHasMoreData(false);
@@ -51,7 +51,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (allPosts.length === 0) {  // Check if allPosts is empty
+    if (allPosts.length === 0) { 
       fetchPosts();
     }
   }, []);

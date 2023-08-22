@@ -10,7 +10,7 @@ export const GET = async (request) => {
     await connectToDB();
     const allPosts = await Post.find({}).populate("creator");
     const totalPosts = allPosts.length;
-    return new Response(JSON.stringify({posts:allPosts.slice(sLimit, eLimit), totalPosts}), { status: 200 });
+    return new Response(JSON.stringify({posts:allPosts.reverse().slice(sLimit, eLimit), totalPosts}), { status: 200 });
   } catch (error) {
     return new Response(JSON.stringify({ error: "Failed to get posts", errorMessage: error.message }), { status: 500 });
 

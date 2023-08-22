@@ -12,6 +12,7 @@ export default function PostNewQuote({
   const { data: session } = useSession();
   const [user, setUser] = useState({});
   const [currentTime, setCurrentTime] = useState("");
+
   const fileInputRef = useRef(null);
 
   const handleImageUpload = () => {
@@ -77,10 +78,11 @@ export default function PostNewQuote({
               <textarea
                 name="Caption"
                 value={post.caption}
-                onChange={(e) => setPost({ ...post, caption: e.target.value })}
+                rows={4}
+                onChange={(e)=>setPost({ ...post, caption: e.target.value })}
                 className="w-full bg-transparent outline-none resize-none h-full"
                 placeholder="Caption"
-              ></textarea>
+              />
             </p>
           </div>
           {post.image && (

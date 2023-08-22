@@ -204,7 +204,7 @@ export default function QuoteItem({
         className="w-full h-fit overflow-hidden px-2 sm:px-4"
         id="quote-item"
       >
-        <p className="text-gray-400 text-justify sm:text-lg text-sm h-fit">
+        <p className="text-gray-400 text-start sm:text-lg whitespace-pre-line text-sm h-fit">
           {post.caption}
         </p>
       </div>

@@ -8,16 +8,21 @@ export default function Quotes({ posts, section, dataLoading, setData }) {
         id="quote-area"
         className={`${
           section === "Trending"
-            ? "flex justify-center items-center flex-col gap-4 p-2 py-8 pb-16 sm:p-8"
+            ? "flex justify-center items-center flex-col gap-6 p-2 py-8 pb-16 sm:p-8"
             : "flex gap-12 mt-10 sm:flex-row flex-col sm:items-start  justify-center items-center"
         }`}
       >
-        {section === "Trending" && <h1
-          id="quotes-heading"
-          className="text-2xl sm:text-4xl border-b-2 w-3/4 border-slate-500 text-center mb-4"
-        >
-          FEED
-        </h1>}
+        {section === "Trending" && (
+          <div className="w-3/4 self-center flex items-center justify-center flex-col gap-2">
+            <h1
+              id="quotes-heading"
+              className="text-2xl sm:text-4xl w-full text-center"
+            >
+              FEED
+            </h1>
+            <div className="h-[1px] w-1/2 bg-slate-400"></div>
+          </div>
+        )}
         {dataLoading ? (
           <Skeleton type="quotes" />
         ) : (
