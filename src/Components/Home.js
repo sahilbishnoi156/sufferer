@@ -40,9 +40,8 @@ export default function Home() {
   const fetchMoreData = async () => {
     const newStartLimit = dataLimit;
     const newEndLimit = dataLimit + 4;
-    const timestamp = new Date().getTime();
     const response = await fetch(
-      `/api/quote?sLimit=${0}&eLimit=${dataLimit}&timestamp=${timestamp}`
+      `/api/quote?sLimit=${0}&eLimit=${dataLimit}`
     );
 
     const data = await response.json();
