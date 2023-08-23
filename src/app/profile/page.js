@@ -44,7 +44,7 @@ export default function page() {
     );
   }
   return (
-    <div className="w-full flex justify-center items-center mb-16">
+    <div className="w-full flex justify-center items-center mb-16 overflow-hidden">
       <LoadingBar
             color="#f11946"
             progress={progress}

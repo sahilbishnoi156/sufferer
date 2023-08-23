@@ -3,7 +3,6 @@ import QuoteItem from "./QuoteItem";
 import Skeleton from "./Skeleton";
 export default function Quotes({ posts, section, dataLoading, setData, currentUser, setCurrentUser }) {
   return (
-    <>
       <div
         id="quote-area"
         className={`${
@@ -54,6 +53,5 @@ export default function Quotes({ posts, section, dataLoading, setData, currentUs
           </>
         )}
       </div>
-    </>
   );
 }

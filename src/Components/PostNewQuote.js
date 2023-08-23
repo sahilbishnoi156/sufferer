@@ -87,12 +87,12 @@ export default function PostNewQuote({
             </p>
           </div>
           {post.image && (
-            <div className="w-full h-96 mt-2">
+            <div className="w-full h-fit mt-2">
               <img
                 draggable="false"
                 src={post.image}
                 alt="Uploaded"
-                className="w-full h-full object-contain select-none"
+                className="w-full h-96 object-contain select-none"
               />
             </div>
           )}
@@ -169,7 +169,7 @@ export default function PostNewQuote({
           ) : (
             <button
               type="submit"
-              className="inline-flex items-center px-4 py-2 text-sm leading-6 text-white bg-indigo-500 rounded-md shadow hover:bg-indigo-400"
+              className="inline-flex items-center px-4 py-2 text-sm leading-6 text-white bg-indigo-500 rounded-xl shadow hover:bg-indigo-400"
             >
               <i className="fa-solid fa-share text-sm text-white mr-2"></i>
               Upload

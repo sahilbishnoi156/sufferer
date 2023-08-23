@@ -13,35 +13,37 @@ export default function Home() {
   const [dataLoading, setDataLoading] = useState(false);
   const { data: session, status } = useSession();
   const [dataLimit, setDataLimit] = useState(4);
-  const [currentUser, setCurrentUser] = useState({})
+  const [currentUser, setCurrentUser] = useState({});
   const [hasMoreData, setHasMoreData] = useState(true);
 
   const fetchPosts = async () => {
     try {
-      setProgress(30);
       setDataLoading(true);
       const timestamp = new Date().getTime();
       const response = await fetch(
         `/api/quote?sLimit=${0}&eLimit=${dataLimit}&timestamp=${timestamp}`
       );
-
-      setProgress(50);
       const data = await response.json();
       setDataLoading(false);
       setAllPosts(data.posts);
       setHasMoreData(data.totalPosts > dataLimit);
-      setProgress(100);
       return data;
     } catch (error) {
-      setProgress(100);
       console.log("failed to get posts", error);
     }
   };
 
   const fetchCurrentUser = async () => {
-    const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem('Sufferer-site-userId')}`);
+    setProgress(30);
+
+    const response = await fetch(
+      `/api/users/getUser/${
+        session?.user.id || localStorage.getItem("Sufferer-site-userId")
+      }`
+    );
     const user = await response.json();
     setCurrentUser(user);
+    setProgress(100);
   };
 
   const fetchMoreData = async () => {
@@ -85,7 +87,9 @@ export default function Home() {
             next={fetchMoreData}
             hasMore={hasMoreData}
             loader={
-              <h4 className="w-full text-center text-white ">Loading ...</h4>
+              <div className="w-full flex items-center justify-center">
+              <h2 className="text-white">Loading...</h2>
+              </div>
             }
           >
             <Quotes
@@ -102,7 +106,10 @@ export default function Home() {
           id="side-profile"
           style={{ minWidth: "30%" }}
         >
-          <SideProfile session={session} currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+          <SideProfile
+            session={session}
+            currentUser={currentUser}
+          />
         </div>
       </div>
     </>

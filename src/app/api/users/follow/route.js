@@ -8,7 +8,7 @@ export const PATCH = async (request) => {
 
   const { followerId, followingId } = await request.json();
   if (followerId === followingId) {
-    return new Response("User Not Found", { status: 404 });
+    return new Response("User not accepted", { status: 406 });
   }
   try {
     await connectToDB();

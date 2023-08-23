@@ -27,8 +27,8 @@ export default function MainProfile({
   const [imageClick, setImageClick] = useState(false);
   const [followClicked, setFollowClicked] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
-  const [currentUser, setCurrentUser] = useState({})
-  const [postType, setPostType] = useState("userPosts")
+  const [currentUser, setCurrentUser] = useState({});
+  const [postType, setPostType] = useState("userPosts");
 
   // Ref
   const profileNavRef = useRef();
@@ -46,9 +46,7 @@ export default function MainProfile({
 
   const getAllPost = async () => {
     setProgress(40);
-    const response = await fetch(
-      `/api/quote/allquotes`
-    );
+    const response = await fetch(`/api/quote/allquotes`);
     setProgress(80);
     const data = await response.json();
     setAllPosts(data.posts);
@@ -90,7 +88,7 @@ export default function MainProfile({
       status === "authenticated" ||
       localStorage.getItem("Sufferer-site-authToken")
     ) {
-      setCurrentUser(user)
+      setCurrentUser(user);
       setUserInfo({ followers: user.followers, followings: user.followings });
     } else if (
       status === "unauthenticated" ||
@@ -121,14 +119,14 @@ export default function MainProfile({
   }
   return (
     <>
-      <div className="sm:w-5/6 lg:w-5/6 xl:5/6 w-full h-full text-white flex flex-col justify-center items-center gap-2 px-4 relative">
+      <div className="sm:w-5/6 lg:w-5/6 xl:5/6 w-full h-full text-white flex flex-col justify-center items-center gap-2 px-4 ">
         <div
-          className={`sm:hidden absolute bottom-0 left-0 w-screen h-fit px-4 overflow-hidden mb-12 ${
+          className={`sm:hidden fixed bottom-0 left-0 w-screen h-fit px-4 overflow-hidden mb-12 ${
             toggleBtmNav ? "-z-50" : "z-10"
           }`}
         >
           <div
-            className={`relative w-full h-full ${
+            className={`w-full h-full ${
               toggleBtmNav ? "opacity-0 translate-y-full" : "opacity-100"
             } bg-gray-600 rounded-t-3xl box-border overflow-hidden`}
             ref={bottomDivRef}
@@ -265,23 +263,33 @@ export default function MainProfile({
               {pathname === "/profile" ? null : (
                 <div className="mt-4 flex gap-4 mb-4">
                   {!followClicked ? (
-                    <button
-                      type="button"
-                      className={`${
-                        UserInfo.followers &&
+                    (session?.user.id ||
+                      localStorage.getItem("Sufferer-site-userId")) !==
+                      user._id && (
+                      <button
+                        type="button"
+                        className={`${
+                          UserInfo.followers &&
+                          UserInfo.followers.includes(
+                            session?.user.id ||
+                              localStorage.getItem("Sufferer-site-userId")
+                          )
+                            ? "bg-slate-700"
+                            : "bg-blue-600 hover:scale-105 cursor-pointer"
+                        } w-24 text-sm p-4 py-1 rounded-lg select-none `}
+                        onClick={async () => {
+                          handleFollowUser();
+                        }}
+                      >
+                        {UserInfo.followers &&
                         UserInfo.followers.includes(
                           session?.user.id ||
                             localStorage.getItem("Sufferer-site-userId")
                         )
-                          ? "bg-slate-700"
-                          : "bg-blue-600 hover:scale-105 cursor-pointer"
-                      } w-24 text-sm p-4 py-1 rounded-lg select-none `}
-                      onClick={async () => {
-                        handleFollowUser();
-                      }}
-                    >
-                      Follow
-                    </button>
+                          ? "Following"
+                          : "Follow"}
+                      </button>
+                    )
                   ) : (
                     <div className="bg-slate-600 cursor-wait select-none w-24 text-sm p-4 py-1 rounded-lg flex items-center justify-center">
                       <svg
@@ -317,28 +325,37 @@ export default function MainProfile({
         {pathname === "/profile" ? (
           <div
             id="profile-navigation"
-            className="flex gap-8 w-fit select-none items-center justify-center relative z-50 "
+            className="flex gap-8 w-fit select-none items-center justify-center "
             ref={profileNavRef}
           >
             <div onClick={() => setPostType("userPosts")}>Posts</div>
-            <div onClick={() => {
-              allPosts.length <= 0 && getAllPost();
-              setPostType("savedPosts")}}>Saved</div>
-            <div onClick={() => {
-              setPostType("likedPosts")
-              allPosts.length <= 0 && getAllPost();
-            }}>Liked Posts</div>
+            <div
+              onClick={() => {
+                allPosts.length <= 0 && getAllPost();
+                setPostType("savedPosts");
+              }}
+            >
+              Saved
+            </div>
+            <div
+              onClick={() => {
+                setPostType("likedPosts");
+                allPosts.length <= 0 && getAllPost();
+              }}
+            >
+              Liked Posts
+            </div>
           </div>
         ) : (
           <div
             id="profile-navigation"
-            className="flex gap-8 w-fit select-none items-center justify-center relative z-50 before:w-56"
+            className="flex gap-8 w-fit select-none items-center justify-center relative z-30 before:w-56"
             ref={profileNavRef}
           >
             <div>Quotes</div>
           </div>
         )}
-        <div className="w-full mb-10">
+        <div className="w-full mb-10 relative z-50">
           <div className="w-full" id="profile-quotes">
             {postType === "userPosts" ? (
               <Quotes
@@ -355,7 +372,9 @@ export default function MainProfile({
                 setCurrentUserPosts={setCurrentUserPosts}
                 currentUser={currentUser}
                 setAllPosts={setAllPosts}
-                postSection={postType === "likedPosts" ? user.likedPosts : user.savedPosts}
+                postSection={
+                  postType === "likedPosts" ? user.likedPosts : user.savedPosts
+                }
                 postType={postType}
               />
             )}

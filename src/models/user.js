@@ -51,7 +51,7 @@ const UserSchema = new mongoose.Schema({
     default: Date.now, 
   },
 });
-
+UserSchema.set("toJSON", { getters: true, virtuals: false, minimize: false });
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
 export default User;

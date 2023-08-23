@@ -160,8 +160,10 @@ export default function QuoteItem({
   };
 
   const handleUserIdClick = () => {
-    if (creator._id === session?.user.id) return router.push(`/profile`);
-    router.push(`/profile/${creator._id}?name=${creator.username}`);
+    if (pathname !== "/profile") {
+      if (creator._id === session?.user.id) return router.push(`/profile`);
+      router.push(`/profile/${creator._id}?name=${creator.username}`);
+    }
   };
   const handleEditClick = () => {
     router.push(`/updatepost/?id=${id}`);
@@ -196,7 +198,7 @@ export default function QuoteItem({
     <div
       className={`text-white ${
         section === "Trending" ? "lg:w-3/4 w-full" : "lg:w-3/4 w-full"
-      } h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between`}
+      } h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between overflow-hidden`}
       id={id}
     >
       <div className="w-full h-fit p-2 sm:p-4">
@@ -232,14 +234,17 @@ export default function QuoteItem({
 
             {/* Post Info */}
             {togglePostInfo && (
-              <div className="h-screen w-screen flex items-center justify-center backdrop-blur-sm fixed top-0 left-0 z-50 select-none">
-                <div className="bg-black w-screen h-screen fixed top-0 left-0 z-20 opacity-60"></div>
+              <div
+                className="h-screen w-full flex items-center justify-center backdrop-blur-sm fixed left-0 z-50 select-none"
+                id="post-info"
+              >
+                <div className="bg-black w-full h-screen fixed left-0 z-30 opacity-60"></div>
                 <div
-                  className="h-fit p-2 w-64 bg-slate-800 rounded-3xl relative z-30"
+                  className="h-fit p-2 w-64 bg-slate-800 rounded-3xl relative z-40"
                   id="post-info"
                 >
                   <div className="w-full h-full">
-                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 w-full h-full flex items-center justify-center gap-2 flex-col">
+                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 w-full h-full flex items-center justify-center gap-2 flex-col relative ">
                       <li
                         className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
                         onClick={() => {
@@ -270,7 +275,7 @@ export default function QuoteItem({
                           </li>
                           <li className="w-full h-[1px] bg-slate-400"></li>
                           <li
-                            className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
+                            className="px-4 py-2 hover:rotate-2 text-red-400 cursor-pointer transition-all"
                             onClick={handleDelete}
                           >
                             <i className="fa-solid fa-trash cursor-pointer mr-2"></i>
@@ -281,7 +286,7 @@ export default function QuoteItem({
                       ) : (
                         <></>
                       )}
-                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all text-red-500">
+                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all text-red-500 brightness-150">
                         <i className="fa-regular fa-flag mr-2"></i>
                         Report Post
                       </li>
@@ -323,7 +328,7 @@ export default function QuoteItem({
         </p>
       </div>
       {post.image && (
-        <div className="w-full h-full mt-2 relative overflow-hidden">
+        <div className="w-full h-full mt-2 overflow-hidden">
           <div className=" h-full w-full p-2">
             <img
               src={post.image}
