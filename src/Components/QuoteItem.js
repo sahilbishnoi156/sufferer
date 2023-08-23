@@ -71,33 +71,42 @@ export default function QuoteItem({
 
   const handlePostLiking = async () => {
     try {
-      const response = await fetch(`/api/quote/like`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          userId:
-            session?.user.id || localStorage.getItem("Sufferer-site-userId"),
-          postId: id,
-        }),
-      });
-      const data = await response.json();
-      setPostInfo({
-        likes: await data.likedPost.likes,
-        comments: await data.likedPost.comments,
-        shares: await data.likedPost.shares,
-      });
+      if (!isFetchingLike) {
+        setIsFetchingLike(true);
+        // Optimistic UI update
+        setPostLiked(!postLiked);
 
-      if (data.status !== 200) {
-        throw new Error(data.message || "Something went wrong");
+        const response = await fetch(`/api/quote/like`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            userId:
+              session?.user.id || localStorage.getItem("Sufferer-site-userId"),
+            postId: id,
+          }),
+        });
+        const data = await response.json();
+        setPostInfo({
+          likes: data.likedPost.likes,
+          comments: data.likedPost.comments,
+          shares: data.likedPost.shares,
+        });
+
+        if (data.status !== 200) {
+          throw new Error(data.message || "Something went wrong");
+        }
+
+        setPostLiked(!postLiked); // Toggle the like state
       }
-      // Handle successful response, update state, etc.
     } catch (error) {
       console.log(error);
     } finally {
-      setIsFetchingLike(false); // Reset the flag after the request completes
+      setIsFetchingLike(false);
     }
   };
 
   const handlePostSaving = async () => {
+    // Optimistic UI update
+    setPostSaved(!postSaved);
     try {
       const response = await fetch(`/api/quote/save`, {
         method: "PATCH",
@@ -224,7 +233,7 @@ export default function QuoteItem({
             {/* Post Info */}
             {togglePostInfo && (
               <div className="h-screen w-screen flex items-center justify-center backdrop-blur-sm fixed top-0 left-0 z-50 select-none">
-                <div className="bg-black w-screen h-screen fixed z-20 opacity-60" ></div>
+                <div className="bg-black w-screen h-screen fixed top-0 left-0 z-20 opacity-60"></div>
                 <div
                   className="h-fit p-2 w-64 bg-slate-800 rounded-3xl relative z-30"
                   id="post-info"
@@ -240,12 +249,14 @@ export default function QuoteItem({
                       >
                         <i
                           className={`fa-${
-                            currentUser.savedPosts && currentUser.savedPosts.includes(id) || postSaved
+                            (currentUser.savedPosts &&
+                              currentUser.savedPosts.includes(id)) ||
+                            postSaved
                               ? "solid"
                               : "regular"
                           } fa-bookmark mr-2`}
                         ></i>
-                        Save
+                        {currentUser.savedPosts.includes(id) ? "Saved" : "Save"}
                       </li>
                       <li className="w-full h-[1px] bg-slate-400"></li>
                       {pathname === "/profile" ? (

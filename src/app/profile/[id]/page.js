@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loading from "@/Components/Loading";
-import { toast } from "react-toastify";
 import LoadingBar from "react-top-loading-bar";
 
 export default function page({ params }) {
@@ -61,9 +60,9 @@ export default function page({ params }) {
       <MainProfile
         setProgress={setProgress}
         user={currentUser}
-        data={quotes}
+        currentUserPosts={quotes}
         section={`${userName}'s`}
-        setData={setQuotes}
+        setCurrentUserPosts={setQuotes}
         loading={loading}
         params={params}
       />

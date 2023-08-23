@@ -27,6 +27,7 @@ export default function MainProfile({
   const [imageClick, setImageClick] = useState(false);
   const [followClicked, setFollowClicked] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
+  const [currentUser, setCurrentUser] = useState({})
   const [postType, setPostType] = useState("userPosts")
 
   // Ref
@@ -89,6 +90,7 @@ export default function MainProfile({
       status === "authenticated" ||
       localStorage.getItem("Sufferer-site-authToken")
     ) {
+      setCurrentUser(user)
       setUserInfo({ followers: user.followers, followings: user.followings });
     } else if (
       status === "unauthenticated" ||
@@ -119,7 +121,7 @@ export default function MainProfile({
   }
   return (
     <>
-      <div className="sm:w-5/6 lg:w-5/6 xl:5/6 w-full h-full text-white flex flex-col justify-center items-center gap-2 px-4">
+      <div className="sm:w-5/6 lg:w-5/6 xl:5/6 w-full h-full text-white flex flex-col justify-center items-center gap-2 px-4 relative">
         <div
           className={`sm:hidden absolute bottom-0 left-0 w-screen h-fit px-4 overflow-hidden mb-12 ${
             toggleBtmNav ? "-z-50" : "z-10"
@@ -319,10 +321,12 @@ export default function MainProfile({
             ref={profileNavRef}
           >
             <div onClick={() => setPostType("userPosts")}>Posts</div>
-            <div onClick={() => setPostType("savedPosts")}>Saved</div>
+            <div onClick={() => {
+              allPosts.length <= 0 && getAllPost();
+              setPostType("savedPosts")}}>Saved</div>
             <div onClick={() => {
               setPostType("likedPosts")
-              getAllPost();
+              allPosts.length <= 0 && getAllPost();
             }}>Liked Posts</div>
           </div>
         ) : (
@@ -341,11 +345,15 @@ export default function MainProfile({
                 posts={currentUserPosts}
                 section={section}
                 setCurrentUserPosts={setCurrentUserPosts}
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
               />
             ) : (
               <SavedPosts
                 allPosts={allPosts}
                 section={section}
+                setCurrentUserPosts={setCurrentUserPosts}
+                currentUser={currentUser}
                 setAllPosts={setAllPosts}
                 postSection={postType === "likedPosts" ? user.likedPosts : user.savedPosts}
                 postType={postType}

@@ -1,6 +1,7 @@
 import React from "react";
 import QuoteItem from "./QuoteItem";
-export default function Quotes({ allPosts, section, postSection, setAllPosts, postType }) {
+export default function Quotes({ allPosts, section, postSection, setAllPosts, postType, currentUser,
+  setCurrentUser, }) {
   return (
     <>
       <div
@@ -19,6 +20,8 @@ export default function Quotes({ allPosts, section, postSection, setAllPosts, po
                   setPosts={setAllPosts}
                   posts={allPosts}
                   post={post}
+                  currentUser={currentUser}
+                  setCurrentUser={setCurrentUser}
                   section={section}
                 />
               );
