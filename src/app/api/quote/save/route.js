@@ -7,14 +7,13 @@ export const PATCH = async (request) => {
     return new Response("Method not allowed", { status: 405 });
   }
   const { userId, postId } = await request.json();
-
   try {
     await connectToDB();
 
     // Find the existing follower and following users by their IDs
     const foundUser = await User.findById(userId);
 
-    if (!foundUser || !likedPost) {
+    if (!foundUser) {
       return new Response("User Not Found", { status: 404 });
     }
 
@@ -29,7 +28,6 @@ export const PATCH = async (request) => {
 
     // Save both
     await foundUser.save();
-
     // Return updated post
     return new Response(JSON.stringify({ status: 200 , foundUser}), {
       headers: { "Content-Type": "application/json" },

@@ -50,7 +50,6 @@ export default function MainProfile({
     );
     setProgress(80);
     const data = await response.json();
-    console.log(data)
     setAllPosts(data.posts);
     setProgress(100);
   };

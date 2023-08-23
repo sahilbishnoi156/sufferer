@@ -6,11 +6,10 @@ import Skeleton from './Skeleton';
 import { toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
 
-export default function SideProfile({session}){
+export default function SideProfile({session, currentUser, setCurrentUser}){
     const [dataLoading, setDataLoading] = useState(false)
     const [allUsers, setUsers] = useState([]);
     const router = useRouter();
-    const [currentUser, setCurrentUser] = useState({})
 
   const fetchRelatedUsers = async () => {
     try {
@@ -24,11 +23,7 @@ export default function SideProfile({session}){
     }
     
   };
-  const fetchCurrentUser = async () => {
-    const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem('Sufferer-site-userId')}`);
-    const user = await response.json();
-    setCurrentUser(user);
-  };
+
   useEffect(() => {
     if (currentUser.username === "") {
       router.push(`/login/getusername/${session?.user.id || localStorage.getItem('Sufferer-site-userId')}`)
@@ -45,7 +40,6 @@ export default function SideProfile({session}){
     }
     if (window.innerWidth > 640 ) {
       fetchRelatedUsers();
-      fetchCurrentUser();
     }
   }, [session?.user.id,localStorage.getItem('Sufferer-site-userId')]);
     

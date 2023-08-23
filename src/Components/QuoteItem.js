@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import "../styles/profile.css"
+import "../styles/profile.css";
 
 export default function QuoteItem({
   title,
@@ -13,14 +13,17 @@ export default function QuoteItem({
   setPosts,
   posts,
   post,
+  currentUser,
+  setCurrentUser,
   section,
 }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [postTime, setPostTime] = useState("");
   const router = useRouter();
+  const [isFetchingLike, setIsFetchingLike] = useState(false);
   const [postLiked, setPostLiked] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetchingSave, setIsFetchingSave] = useState(false);
   const [postSaved, setPostSaved] = useState(false);
   const [postInfo, setPostInfo] = useState({
     likes: [],
@@ -66,7 +69,7 @@ export default function QuoteItem({
     }
   };
 
-  const handlePostLike = async () => {
+  const handlePostLiking = async () => {
     try {
       const response = await fetch(`/api/quote/like`, {
         method: "PATCH",
@@ -90,11 +93,11 @@ export default function QuoteItem({
     } catch (error) {
       console.log(error);
     } finally {
-      setIsFetching(false); // Reset the flag after the request completes
+      setIsFetchingLike(false); // Reset the flag after the request completes
     }
   };
 
-  const handlePostSave = async () => {
+  const handlePostSaving = async () => {
     try {
       const response = await fetch(`/api/quote/save`, {
         method: "PATCH",
@@ -105,7 +108,8 @@ export default function QuoteItem({
         }),
       });
       const data = await response.json();
-      setPosts()
+      setCurrentUser(data.foundUser);
+
       if (data.status !== 200) {
         throw new Error(data.message || "Something went wrong");
       }
@@ -113,14 +117,26 @@ export default function QuoteItem({
     } catch (error) {
       console.log(error);
     } finally {
-      setIsFetching(false); // Reset the flag after the request completes
+      setIsFetchingSave(false);
     }
   };
 
+  const throttledHandlePostSave = async () => {
+    if (!isFetchingSave) {
+      setIsFetchingSave(true);
+      await handlePostSaving();
+    }
+  };
+
+  const handleTogglePostSave = () => {
+    setPostSaved(!postSaved);
+    throttledHandlePostSave();
+  };
+
   const throttledHandlePostLike = async () => {
-    if (!isFetching) {
-      setIsFetching(true); // Set the flag to indicate an ongoing request
-      await handlePostLike();
+    if (!isFetchingLike) {
+      setIsFetchingLike(true); // Set the flag to indicate an ongoing request
+      await handlePostLiking();
     }
   };
 
@@ -207,18 +223,28 @@ export default function QuoteItem({
 
             {/* Post Info */}
             {togglePostInfo && (
-              <div
-                className="h-screen w-screen flex items-center justify-center backdrop-blur-sm fixed top-0 left-0 z-50 select-none"
-                onClick={() => setTogglePostInfo(false)}
-              >
-                <div className="bg-black w-screen h-screen absolute z-20 opacity-60"></div>
-                <div className="h-fit p-2 w-64 bg-slate-800 rounded-3xl relative z-30" id="post-info">
+              <div className="h-screen w-screen flex items-center justify-center backdrop-blur-sm fixed top-0 left-0 z-50 select-none">
+                <div className="bg-black w-screen h-screen fixed z-20 opacity-60" ></div>
+                <div
+                  className="h-fit p-2 w-64 bg-slate-800 rounded-3xl relative z-30"
+                  id="post-info"
+                >
                   <div className="w-full h-full">
                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 w-full h-full flex items-center justify-center gap-2 flex-col">
-                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all">
-                        <i className={`fa-${postSaved ? "solid" : "regular"} fa-bookmark mr-2`} onClick={()=>setPostSaved(!postSaved)}>
-
-                        </i>
+                      <li
+                        className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
+                        onClick={() => {
+                          handleTogglePostSave();
+                          setPostSaved(!postSaved);
+                        }}
+                      >
+                        <i
+                          className={`fa-${
+                            currentUser.savedPosts && currentUser.savedPosts.includes(id) || postSaved
+                              ? "solid"
+                              : "regular"
+                          } fa-bookmark mr-2`}
+                        ></i>
                         Save
                       </li>
                       <li className="w-full h-[1px] bg-slate-400"></li>
@@ -259,11 +285,11 @@ export default function QuoteItem({
                         want to see this
                       </li>
                       <li className="w-full h-[1px] bg-slate-400"></li>
-                      <li className="hover:rotate-2 cursor-pointer transition-all px-4 py-2">
-                        <i
-                          className="fa-solid fa-xmark mr-2"
-                          onClick={() => setTogglePostInfo(false)}
-                        ></i>
+                      <li
+                        className="hover:rotate-2 cursor-pointer transition-all px-4 py-2"
+                        onClick={() => setTogglePostInfo(false)}
+                      >
+                        <i className="fa-solid fa-xmark mr-2"></i>
                         Cancel
                       </li>
                     </ul>
@@ -313,7 +339,6 @@ export default function QuoteItem({
             </p>
           </div>
         </div>
-        {/* <div className="w-full h-[1px] bg-slate-500 self-center mt-2"></div> */}
         <div className="flex items-center justify-start gap-4 w-full py-2 sm:py-4">
           <div className="flex flex-col items-center justify-center">
             <i

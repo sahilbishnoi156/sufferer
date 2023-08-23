@@ -1,7 +1,7 @@
 import React from "react";
 import QuoteItem from "./QuoteItem";
 import Skeleton from "./Skeleton";
-export default function Quotes({ posts, section, dataLoading, setData }) {
+export default function Quotes({ posts, section, dataLoading, setData, currentUser, setCurrentUser }) {
   return (
     <>
       <div
@@ -31,10 +31,12 @@ export default function Quotes({ posts, section, dataLoading, setData }) {
               posts.map((post) => {
                 return (
                   <QuoteItem
+                    currentUser={currentUser}
                     key={post._id}
                     creator={post.creator}
                     date={post.date || ""}
                     id={post._id}
+                    setCurrentUser={setCurrentUser}
                     setPosts={setData}
                     posts={posts}
                     post={post}

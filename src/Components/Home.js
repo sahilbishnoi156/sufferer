@@ -13,6 +13,7 @@ export default function Home() {
   const [dataLoading, setDataLoading] = useState(false);
   const { data: session, status } = useSession();
   const [dataLimit, setDataLimit] = useState(4);
+  const [currentUser, setCurrentUser] = useState({})
   const [hasMoreData, setHasMoreData] = useState(true);
 
   const fetchPosts = async () => {
@@ -37,6 +38,12 @@ export default function Home() {
     }
   };
 
+  const fetchCurrentUser = async () => {
+    const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem('Sufferer-site-userId')}`);
+    const user = await response.json();
+    setCurrentUser(user);
+  };
+
   const fetchMoreData = async () => {
     const newStartLimit = dataLimit;
     const newEndLimit = dataLimit + 4;
@@ -57,6 +64,7 @@ export default function Home() {
   useEffect(() => {
     if (allPosts.length === 0) {
       fetchPosts();
+      fetchCurrentUser();
     }
   }, []);
 
@@ -84,6 +92,8 @@ export default function Home() {
               posts={allPosts}
               section={"Trending"}
               dataLoading={dataLoading}
+              currentUser={currentUser}
+              setCurrentUser={setCurrentUser}
             />
           </InfiniteScroll>
         </div>
@@ -92,7 +102,7 @@ export default function Home() {
           id="side-profile"
           style={{ minWidth: "30%" }}
         >
-          <SideProfile session={session} />
+          <SideProfile session={session} currentUser={currentUser} setCurrentUser={setCurrentUser}/>
         </div>
       </div>
     </>
