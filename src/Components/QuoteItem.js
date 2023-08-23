@@ -235,10 +235,10 @@ export default function QuoteItem({
             {/* Post Info */}
             {togglePostInfo && (
               <div
-                className="h-screen w-full flex items-center justify-center backdrop-blur-sm fixed left-0 z-50 select-none"
+                className="h-screen w-full flex items-center justify-center backdrop-blur-sm fixed top-0 left-0 z-50 select-none"
                 id="post-info"
               >
-                <div className="bg-black w-full h-screen fixed left-0 z-30 opacity-60"></div>
+                <div className="bg-black w-full h-screen fixed top-0 left-0 z-30 opacity-60"></div>
                 <div
                   className="h-fit p-2 w-64 bg-slate-800 rounded-3xl relative z-40"
                   id="post-info"
