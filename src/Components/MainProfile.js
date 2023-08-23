@@ -361,7 +361,6 @@ export default function MainProfile({
               <Quotes
                 posts={currentUserPosts}
                 section={section}
-                setCurrentUserPosts={setCurrentUserPosts}
                 currentUser={currentUser}
                 setCurrentUser={setCurrentUser}
               />
@@ -369,6 +368,7 @@ export default function MainProfile({
               <SavedPosts
                 allPosts={allPosts}
                 section={section}
+                setCurrentUser={setCurrentUser}
                 setCurrentUserPosts={setCurrentUserPosts}
                 currentUser={currentUser}
                 setAllPosts={setAllPosts}

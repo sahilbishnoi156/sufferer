@@ -107,6 +107,7 @@ export default function QuoteItem({
   const handlePostSaving = async () => {
     // Optimistic UI update
     setPostSaved(!postSaved);
+    
     try {
       const response = await fetch(`/api/quote/save`, {
         method: "PATCH",
@@ -248,15 +249,15 @@ export default function QuoteItem({
                       <li
                         className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
                         onClick={() => {
-                          handleTogglePostSave();
                           setPostSaved(!postSaved);
+                          handleTogglePostSave();
                         }}
                       >
                         <i
                           className={`fa-${
-                            (currentUser.savedPosts &&
-                              currentUser.savedPosts.includes(id)) ||
-                            postSaved
+                            postSaved || (currentUser.savedPosts &&
+                              currentUser.savedPosts.includes(id))
+                            
                               ? "solid"
                               : "regular"
                           } fa-bookmark mr-2`}
