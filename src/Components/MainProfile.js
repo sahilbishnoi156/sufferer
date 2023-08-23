@@ -122,7 +122,7 @@ export default function MainProfile({
       <div className="sm:w-5/6 lg:w-5/6 xl:5/6 w-full h-full text-white flex flex-col justify-center items-center gap-2 px-4 ">
         <div
           className={`sm:hidden fixed bottom-0 left-0 w-screen h-fit px-4 overflow-hidden mb-12 ${
-            toggleBtmNav ? "-z-50" : "z-10"
+            toggleBtmNav ? "-z-50" : "z-30"
           }`}
         >
           <div
@@ -136,13 +136,11 @@ export default function MainProfile({
               <div className="bg-white w-1/4 h-1 rounded-full"></div>
             </div>
             <div className="h-full pb-4 w-full bg-gray-600 flex flex-col justify-center gap-4 pt-2 ">
-              <div className="w-full flex items-center justify-start px-6 gap-4 text-2xl">
-                <i className="fa-solid fa-gear text-white select-none"></i>
-                <Link href="/setting">Setting</Link>
+              <div className="w-full flex items-center justify-start text-2xl px-4">
+                <Link href="/setting" className="flex items-center justify-center gap-4"> <i className="fa-solid fa-gear text-white select-none text-lg"></i>Setting</Link>
               </div>
-              <div className="w-full flex items-center justify-start px-6 gap-4 text-2xl">
-                <i className="fa-solid fa-info text-sm text-slate-600 border-2 bg-white rounded-full p-2 h-6 w-6 select-none"></i>
-                <Link href="/projectrepo">About</Link>
+              <div className="w-full flex items-center justify-start px-4 gap-4 text-2xl">
+                <Link href="/projectrepo" className="flex items-center justify-center gap-4"><i className="fa-solid fa-question"></i>About</Link>
               </div>
             </div>
           </div>
@@ -355,7 +353,7 @@ export default function MainProfile({
             <div>Quotes</div>
           </div>
         )}
-        <div className="w-full mb-10 relative z-50">
+        <div className="w-full mb-10  relative z-10">
           <div className="w-full" id="profile-quotes">
             {postType === "userPosts" ? (
               <Quotes
