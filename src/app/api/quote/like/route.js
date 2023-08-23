@@ -12,8 +12,8 @@ export const PATCH = async (request) => {
     await connectToDB();
 
     // Find the existing follower and following users by their IDs
-    const foundUser = await User.findById(userId); // Which current user is following
-    const likedPost = await Post.findById(postId); // Current user using the app
+    const foundUser = await User.findById(userId);
+    const likedPost = await Post.findById(postId);
 
     if (!foundUser || !likedPost) {
       return new Response("User Not Found", { status: 404 });
@@ -21,16 +21,16 @@ export const PATCH = async (request) => {
 
     // Check if the user is already liking the post
     if (likedPost.likes.includes(userId)) {
-      // unlike: Remove userId from posts's likes list
-      foundUser.likedPosts = foundUser.likedPosts.filter(id => id !== userId)
+      // Unlike: Remove userId from post's likes list
+      foundUser.likedPosts = foundUser.likedPosts.filter(id => id !== postId); // <-- Change userId to postId
       likedPost.likes = likedPost.likes.filter(id => id !== userId);
     } else {
-      // Like: Add userId to posts's likes list
+      // Like: Add userId to post's likes list
       foundUser.likedPosts.push(postId);
       likedPost.likes.push(userId);
     }
 
-    // Save both 
+    // Save both
     await foundUser.save();
     await likedPost.save();
 

@@ -1,6 +1,7 @@
 "use client";
 import "../styles/profile.css";
 import Quotes from "@/Components/Quotes";
+import SavedPosts from "@/Components/SavedPosts";
 import Loading from "../Components/Loading";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -9,9 +10,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function MainProfile({
-  data,
+  currentUserPosts,
   section,
-  setData,
+  setCurrentUserPosts,
   user,
   loading,
   setProgress,
@@ -25,6 +26,8 @@ export default function MainProfile({
   const [toggleBtmNav, setToggleBtmNav] = useState(true);
   const [imageClick, setImageClick] = useState(false);
   const [followClicked, setFollowClicked] = useState(false);
+  const [showQuotes, setShowQuotes] = useState(true);
+  const [allPosts, setAllPosts] = useState([]);
 
   // Ref
   const profileNavRef = useRef();
@@ -38,6 +41,18 @@ export default function MainProfile({
   //
   const handleToggleBottomInfo = () => {
     setToggleBtmNav(!toggleBtmNav);
+  };
+
+  const getAllPost = async () => {
+    setProgress(40);
+    const response = await fetch(
+      `/api/quote/allquotes`
+    );
+    setProgress(80);
+    const data = await response.json();
+    console.log(data)
+    setAllPosts(data.posts);
+    setProgress(100);
   };
 
   const handleFollowUser = async () => {
@@ -177,7 +192,7 @@ export default function MainProfile({
               >
                 <div className="h-52 w-52 lg:h-96 lg:w-96 rounded-full p-3 ">
                   <img
-                  draggable="false"
+                    draggable="false"
                     src={user.image}
                     alt="not found"
                     className="h-full w-full rounded-full object-cover border-4 p-1 hover:scale-105 transition duration-300 select-none"
@@ -203,7 +218,7 @@ export default function MainProfile({
                 )}
               </div>
               <div className="flex sm:gap-8 gap-2 text-center text-xs">
-                <div>{data.length} Quotes</div>
+                <div>{currentUserPosts.length} Quotes</div>
                 <div>
                   {UserInfo.followers && UserInfo.followers.length} Followers
                 </div>
@@ -231,7 +246,7 @@ export default function MainProfile({
               </div>
             </div>
             <div className="hidden gap-8 sm:flex">
-              <div>{data.length} quote</div>
+              <div>{currentUserPosts.length} quote</div>
               <div>
                 {UserInfo.followers && UserInfo.followers.length} Followers
               </div>
@@ -304,9 +319,12 @@ export default function MainProfile({
             className="flex gap-8 w-fit select-none items-center justify-center relative z-50 "
             ref={profileNavRef}
           >
-            <div>Quotes</div>
+            <div onClick={() => setShowQuotes(true)}>Quotes</div>
             <div>Saved</div>
-            <div>Discard</div>
+            <div onClick={() => {
+              setShowQuotes(false);
+              getAllPost();
+            }}>Liked Posts</div>
           </div>
         ) : (
           <div
@@ -318,8 +336,21 @@ export default function MainProfile({
           </div>
         )}
         <div className="w-full mb-10">
-          <div className="w-full">
-            <Quotes posts={data} section={section} setData={setData} />
+          <div className="w-full" id="profile-quotes">
+            {showQuotes ? (
+              <Quotes
+                posts={currentUserPosts}
+                section={section}
+                setCurrentUserPosts={setCurrentUserPosts}
+              />
+            ) : (
+              <SavedPosts
+                allPosts={allPosts}
+                section={section}
+                setAllPosts={setAllPosts}
+                likedPosts={user.likedPosts}
+              />
+            )}
           </div>
         </div>
       </div>

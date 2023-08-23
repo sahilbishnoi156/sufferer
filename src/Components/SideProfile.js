@@ -50,7 +50,7 @@ export default function SideProfile({session}){
   }, [session?.user.id,localStorage.getItem('Sufferer-site-userId')]);
     
   return (
-    <div className="h-screen flex flex-col justify-evenly gap-10 px-8 py-12 fixed border-l-2 border-gray-700">
+    <div className="h-screen flex flex-col justify-evenly gap-10 px-8 py-12 fixed border-l-2 border-gray-700 select-none">
       {!dataLoading ? <div className='flex gap-4 items-center justify-start w-full'>
         <img src={currentUser.image || "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="} alt="d" className='h-16 w-16 rounded-full object-cover'/>
         <span>

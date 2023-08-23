@@ -8,7 +8,7 @@ import Loading from "../../Components/Loading";
 
 export default function page() {
   const [progress, setProgress] = useState(0)
-  const [quotes, setQuotes] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false)
   const [user, setUser] = useState({});
   const { data: session, status } = useSession();
@@ -19,7 +19,7 @@ export default function page() {
       const response = await fetch(`/api/users/${session?.user.id|| localStorage.getItem("Sufferer-site-userId")}/quotes`);
       setProgress(80)
       const data = await response.json();
-      setQuotes(data);
+      setPosts(data);
       setProgress(100)
     };
     const fetchUser = async () => {
@@ -54,8 +54,8 @@ export default function page() {
         user={user}
         setProgress={setProgress}
         section={"My"}
-        data={quotes}
-        setData={setQuotes}
+        currentUserPosts={posts}
+        setCurrentUserPosts={setPosts}
         loading={loading}
       />
     </div>

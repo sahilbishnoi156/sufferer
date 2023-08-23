@@ -4,7 +4,7 @@ const QuoteSkelton = () => {
   return (
     <div
       role="status"
-      className=" flex flex-col gap-4 p-4 border border-gray-200 rounded-2xl shadow animate-pulse md:p-2 dark:border-gray-700 w-full"
+      className=" flex flex-col gap-4 p-4 border border-gray-200 rounded-2xl shadow animate-pulse md:p-2 dark:border-gray-700 w-3/4"
     >
       <div className="flex items-center mt-4 space-x-3 border-b-2 pb-2 border-gray-700">
         <svg
@@ -21,15 +21,13 @@ const QuoteSkelton = () => {
           <div className="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
         </div>
       </div>
-      <div className="border-b-2 pb-6 border-gray-700 h-full">
-        <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 "></div>
+      <div className="">
+        <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-3/4 mb-4"></div>
+        <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-full mb-4"></div>
       </div>
+      <div className="h-32 bg-gray-200 dark:bg-gray-700 w-full mb-4"></div>
       <div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 "></div>
+        <div className="h-6 bg-gray-200 rounded-full dark:bg-gray-700 "></div>
       </div>
 
       <span className="sr-only">Loading...</span>

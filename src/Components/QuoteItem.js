@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
+import "../styles/profile.css"
 
 export default function QuoteItem({
   title,
@@ -12,7 +13,7 @@ export default function QuoteItem({
   setPosts,
   posts,
   post,
-  section
+  section,
 }) {
   const pathname = usePathname();
   const { data: session } = useSession();
@@ -21,9 +22,9 @@ export default function QuoteItem({
   const [postLiked, setPostLiked] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [postInfo, setPostInfo] = useState({
-    likes:[],
-    comments:[],
-    shares:0,
+    likes: [],
+    comments: [],
+    shares: 0,
   });
   const [togglePostInfo, setTogglePostInfo] = useState(false);
 
@@ -69,14 +70,15 @@ export default function QuoteItem({
       const response = await fetch(`/api/quote/like`, {
         method: "PATCH",
         body: JSON.stringify({
-          userId: session?.user.id || localStorage.getItem("Sufferer-site-userId"),
+          userId:
+            session?.user.id || localStorage.getItem("Sufferer-site-userId"),
           postId: id,
         }),
       });
       const data = await response.json();
       setPostInfo({
         likes: await data.likedPost.likes,
-        comments:await data.likedPost.comments,
+        comments: await data.likedPost.comments,
         shares: await data.likedPost.shares,
       });
 
@@ -108,7 +110,6 @@ export default function QuoteItem({
     }
   };
 
-
   const handleUserIdClick = () => {
     if (creator._id === session?.user.id) return router.push(`/profile`);
     router.push(`/profile/${creator._id}?name=${creator.username}`);
@@ -118,7 +119,11 @@ export default function QuoteItem({
   };
   useEffect(() => {
     if (post) {
-      setPostInfo({likes:post.likes, comments:post.comments, shares:post.shares})
+      setPostInfo({
+        likes: post.likes,
+        comments: post.comments,
+        shares: post.shares,
+      });
     }
     const today = new Date();
     const jsonDate = new Date(parseFloat(date)); // converting to date
@@ -140,10 +145,13 @@ export default function QuoteItem({
   }, [date, post]);
   return (
     <div
-      className={`text-white ${section === "Trending" ? "lg:w-3/4" : "lg:w-3/4 w-full"} h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between `}
+      className={`text-white ${
+        section === "Trending" ? "lg:w-3/4 w-full" : "lg:w-3/4 w-full"
+      } h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between`}
       id={id}
     >
       <div className="w-full h-fit p-2 sm:p-4">
+        {/* User Profile  */}
         <div className="w-full flex items-center justify-between pb-2 sm:pb-4">
           <div
             className="w-fit flex items-center justify-start gap-4 overflow-hidden cursor-pointer"
@@ -172,72 +180,65 @@ export default function QuoteItem({
             >
               <i className="fa-solid fa-ellipsis-vertical fa-rotate-90 mr-2 cursor-pointer select-none"></i>
             </div>
+
+            {/* Post Info */}
             {togglePostInfo && (
               <div
-                className="h-screen w-screen backdrop-blur-lg flex items-center justify-center fixed top-0 left-0 z-50 select-none"
+                className="h-screen w-screen flex items-center justify-center backdrop-blur-sm fixed top-0 left-0 z-50 select-none"
                 onClick={() => setTogglePostInfo(false)}
               >
-                <div className="h-fit p-2 border w-64 bg-black rounded-3xl relative">
-                  <div className="absolute -top-10 right-0">
-                    <i
-                      className="fa-solid fa-xmark cursor-pointer hover:scale-110 transition-all"
-                      onClick={() => setTogglePostInfo(false)}
-                    ></i>
-                  </div>
-                  <div id="dropdown" className="w-full h-full">
-                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 w-full h-full flex items-start justify-center gap-2 flex-col">
-                      <li>
-                        <a href="#" className="block px-4 py-2 hover:rotate-2">
-                          <i className="fa-regular fa-bookmark mr-2"></i>
-                          Save
-                        </a>
+                <div className="bg-black w-screen h-screen absolute z-20 opacity-60"></div>
+                <div className="h-fit p-2 w-64 bg-slate-800 rounded-3xl relative z-30" id="post-info">
+                  <div className="w-full h-full">
+                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 w-full h-full flex items-center justify-center gap-2 flex-col">
+                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all">
+                        <i className="fa-regular fa-bookmark mr-2"></i>
+                        Save
                       </li>
                       <li className="w-full h-[1px] bg-slate-400"></li>
                       {pathname === "/profile" ? (
                         <>
-                          <li>
-                            <p
-                              className="block px-4 py-2 hover:rotate-2 cursor-pointer"
-                              onClick={handleEditClick}
-                            >
-                              <i className="fa-solid fa-pen-to-square cursor-pointer mr-2"></i>
-                              Edit Post
-                            </p>
+                          <li
+                            className="block px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
+                            onClick={handleEditClick}
+                          >
+                            <i className="fa-solid fa-pen-to-square cursor-pointer mr-2"></i>
+                            Edit Post
                           </li>
                           <li className="w-full h-[1px] bg-slate-400"></li>
-                          <li>
-                            <p
-                              onClick={handleDelete}
-                              className="block px-4 py-2 hover:rotate-2 cursor-pointer"
-                            >
-                              <i className="fa-solid fa-trash cursor-pointer mr-2"></i>
-                              Delete Post
-                            </p>
+                          <li
+                            className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
+                            onClick={handleDelete}
+                          >
+                            <i className="fa-solid fa-trash cursor-pointer mr-2"></i>
+                            Delete Post
                           </li>
                           <li className="w-full h-[1px] bg-slate-400"></li>
                         </>
                       ) : (
                         <></>
                       )}
-                      <li>
-                        <a href="#" className="block px-4 py-2 hover:rotate-2">
-                          <i className="fa-regular fa-flag mr-2"></i>
-                          Report Post
-                        </a>
+                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all text-red-500 animate-pulse">
+                        <i className="fa-regular fa-flag mr-2"></i>
+                        Report Post
                       </li>
                       <li className="w-full h-[1px] bg-slate-400"></li>
-                      <li>
-                        <a href="#" className="block px-4 py-2 hover:rotate-2">
-                          <i className="fa-regular fa-copy mr-2"></i>
-                          Copy Link
-                        </a>
+                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all">
+                        <i className="fa-regular fa-copy mr-2"></i>
+                        Copy Link
                       </li>
                       <li className="w-full h-[1px] bg-slate-400"></li>
-                      <li>
-                        <a href="#" className="block px-4 py-2 hover:rotate-2">
-                          <i className="fa-regular fa-eye-slash mr-2"></i>I
-                          don't want to see this
-                        </a>
+                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all">
+                        <i className="fa-regular fa-eye-slash mr-2"></i>I don't
+                        want to see this
+                      </li>
+                      <li className="w-full h-[1px] bg-slate-400"></li>
+                      <li className="hover:rotate-2 cursor-pointer transition-all px-4 py-2">
+                        <i
+                          className="fa-solid fa-xmark mr-2"
+                          onClick={() => setTogglePostInfo(false)}
+                        ></i>
+                        Cancel
                       </li>
                     </ul>
                   </div>
@@ -246,8 +247,10 @@ export default function QuoteItem({
             )}
           </div>
         </div>
+
         <div className="w-full h-[1px] bg-slate-500 self-center"></div>
       </div>
+      {/* Post Body  */}
       <div
         className="w-full h-fit overflow-hidden px-2 sm:px-4"
         id="quote-item"
@@ -257,12 +260,12 @@ export default function QuoteItem({
         </p>
       </div>
       {post.image && (
-        <div className="w-full h-96 mt-2 relative overflow-hidden">
-          <div className=" h-full w-full p-4">
+        <div className="w-full h-full mt-2 relative overflow-hidden">
+          <div className=" h-full w-full p-2">
             <img
               src={post.image}
               alt="Not found"
-              className="w-full h-full object-contain select-none  rounded-sm"
+              className="w-full max-h-96 h-full object-contain select-none rounded-sm"
             />
           </div>
         </div>
@@ -270,14 +273,17 @@ export default function QuoteItem({
       <div className="w-full px-4">
         <div className="mt-2 flex justify-between items-center w-full text-xs ">
           <p className="flex gap-1 items-center justify-center">
-            <i className="fa-solid fa-heart"></i>{postInfo.likes && postInfo.likes.length}
+            <i className="fa-solid fa-heart"></i>
+            {postInfo.likes && postInfo.likes.length}
           </p>
           <div className="flex gap-2">
             <p className="flex gap-1 items-center justify-center">
-              <i className="fa-regular fa-comment"></i>{postInfo.likes && postInfo.comments.length}
+              <i className="fa-regular fa-comment"></i>
+              {postInfo.likes && postInfo.comments.length}
             </p>
             <p className="flex gap-1 items-center justify-center">
-              <i className="fa-solid fa-share cursor-pointer"></i>{postInfo.likes && (postInfo.shares || 0)}
+              <i className="fa-solid fa-share "></i>
+              {postInfo.likes && (postInfo.shares || 0)}
             </p>
           </div>
         </div>
@@ -286,7 +292,14 @@ export default function QuoteItem({
           <div className="flex flex-col items-center justify-center">
             <i
               className={`fa-${
-                postInfo.likes && (postInfo.likes.includes(session?.user.id || localStorage.getItem("Sufferer-site-userId")) || postLiked) ? "solid" : "regular"
+                postInfo.likes &&
+                (postInfo.likes.includes(
+                  session?.user.id ||
+                    localStorage.getItem("Sufferer-site-userId")
+                ) ||
+                  postLiked)
+                  ? "solid"
+                  : "regular"
               } fa-heart cursor-pointer transition duration-300 text-lg sm:text-2xl`}
               onClick={HandlePostLike}
             ></i>

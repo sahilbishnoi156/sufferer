@@ -19,9 +19,11 @@ export default function Home() {
     try {
       setProgress(30);
       setDataLoading(true);
+      const timestamp = new Date().getTime();
       const response = await fetch(
-        `/api/quote?sLimit=${0}&eLimit=${dataLimit}`
+        `/api/quote?sLimit=${0}&eLimit=${dataLimit}&timestamp=${timestamp}`
       );
+
       setProgress(50);
       const data = await response.json();
       setDataLoading(false);
@@ -38,9 +40,11 @@ export default function Home() {
   const fetchMoreData = async () => {
     const newStartLimit = dataLimit;
     const newEndLimit = dataLimit + 4;
+    const timestamp = new Date().getTime();
     const response = await fetch(
-      `/api/quote?sLimit=${newStartLimit}&eLimit=${newEndLimit}`
+      `/api/quote?sLimit=${0}&eLimit=${dataLimit}&timestamp=${timestamp}`
     );
+
     const data = await response.json();
     if (data.posts.length > 0) {
       setAllPosts((prevPosts) => [...prevPosts, ...data.posts]);
@@ -51,7 +55,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (allPosts.length === 0) { 
+    if (allPosts.length === 0) {
       fetchPosts();
     }
   }, []);
@@ -61,7 +65,7 @@ export default function Home() {
   }
   return (
     <>
-      <div className="text-white box-border flex justify-end bg-black">
+      <div className="text-white box-border flex justify-end bg-black ">
         <LoadingBar
           color="#f11946"
           progress={progress}
