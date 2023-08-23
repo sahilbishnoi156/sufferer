@@ -26,6 +26,14 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  savedPosts:{
+    type:Array,
+    default:[],
+  },
+  likedPosts:{
+    type:Array,
+    default:[],
+  },
   username: {
     type: String,
     unique:[true, 'Username already exists!'],
@@ -37,7 +45,11 @@ const UserSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-  }
+  },
+  userFrom: {
+    type: String,
+    default: Date.now, 
+  },
 });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);

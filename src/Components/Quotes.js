@@ -9,7 +9,7 @@ export default function Quotes({ posts, section, dataLoading, setData }) {
         className={`${
           section === "Trending"
             ? "flex justify-center items-center flex-col gap-6 p-2 py-8 pb-16 sm:p-8"
-            : "flex gap-12 mt-10 sm:flex-row flex-col sm:items-start  justify-center items-center"
+            : "flex items-center justify-center flex-col gap-6 mt-10"
         }`}
       >
         {section === "Trending" && (
@@ -38,6 +38,7 @@ export default function Quotes({ posts, section, dataLoading, setData }) {
                     setPosts={setData}
                     posts={posts}
                     post={post}
+                    section={section}
                   />
                 );
               })

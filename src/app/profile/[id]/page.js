@@ -16,57 +16,8 @@ export default function page({ params }) {
   const router = useRouter();
   const userName = searchParams.get("name");
   const { data: session, status } = useSession();
-  const [timeoutId, setTimeoutId] = useState(null);
-
-
-  const handleFollowUser = async () => {
-    try {
-      if (timeoutId) {
-        clearTimeout(timeoutId); // Clear any existing timeouts
-      }
-
-      const newTimeoutId = setTimeout(async () => {
-        try {
-          const response = await fetch(`/api/users/follow`, {
-            method: "PATCH",
-            body: JSON.stringify({
-              followerId: params?.id,
-              followingId: session?.user.id || localStorage.getItem("Sufferer-site-userId"),
-            }),
-          });
-
-          const data = await response.json();
-
-          if (data.status !== 200) {
-            throw new Error(data.message || "Something went wrong");
-          }
-
-          // Handle successful response, update state, etc.
-        } catch (error) {
-          // Handle error
-        }
-      }, 5000);
-
-      setTimeoutId(newTimeoutId);
-    } catch (error) {
-      console.error("Error following/unfollowing user:", error);
-      toast.error(error.message || "An error occurred", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-
-      // Return null or some default value indicating failure
-      return null;
-    }
-  };
   
-
+  // use Effect
   useEffect(() => {
     const fetchPosts = async () => {
       setProgress(30);
@@ -111,10 +62,10 @@ export default function page({ params }) {
         setProgress={setProgress}
         user={currentUser}
         data={quotes}
-        handleFollowUser={handleFollowUser}
         section={`${userName}'s`}
         setData={setQuotes}
         loading={loading}
+        params={params}
       />
     </div>
   );

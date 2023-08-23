@@ -47,12 +47,13 @@ export default function PostNewQuote({
   }, []);
   return (
     <>
-      <form onSubmit={handleSubmit} className="w-full sm:w-3/4 h-full">
+      <form onSubmit={handleSubmit} className="w-full sm:w-3/4 h-full select-none">
         <div className="text-white w-full sm:w-full h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between">
           <div className="w-full h-fit p-2 sm:p-4">
             <div className="w-full flex items-center justify-between pb-2 sm:pb-4">
               <div className="w-fit flex items-center justify-start gap-4 overflow-hidden cursor-pointer">
                 <img
+                  draggable="false"
                   src={user.image}
                   alt="not found"
                   className="h-8 w-8 rounded-full object-cover"
@@ -88,15 +89,16 @@ export default function PostNewQuote({
           {post.image && (
             <div className="w-full h-96 mt-2">
               <img
+                draggable="false"
                 src={post.image}
                 alt="Uploaded"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain select-none"
               />
             </div>
           )}
           <div className="mt-2 flex justify-between items-center w-full px-2 sm:px-4  text-xs">
             <p className="flex gap-1 items-center justify-center">
-              <i className="fa-solid fa-heart"></i>0
+              <i className="fa-solid fa-heart "></i>0
             </p>
             <div className="flex gap-2">
               <p className="flex gap-1 items-center justify-center">
@@ -170,7 +172,7 @@ export default function PostNewQuote({
               className="inline-flex items-center px-4 py-2 text-sm leading-6 text-white bg-indigo-500 rounded-md shadow hover:bg-indigo-400"
             >
               <i className="fa-solid fa-share text-sm text-white mr-2"></i>
-              Share
+              Upload
             </button>
           )}
         </div>

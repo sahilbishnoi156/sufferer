@@ -15,7 +15,7 @@ export default function MainProfile({
   user,
   loading,
   setProgress,
-  handleFollowUser,
+  params,
 }) {
   // States
   const [UserInfo, setUserInfo] = useState({
@@ -39,6 +39,36 @@ export default function MainProfile({
   const handleToggleBottomInfo = () => {
     setToggleBtmNav(!toggleBtmNav);
   };
+
+  const handleFollowUser = async () => {
+    setFollowClicked(true);
+    try {
+      const response = await fetch(`/api/users/follow`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          followerId: params?.id,
+          followingId:
+            session?.user.id || localStorage.getItem("Sufferer-site-userId"),
+        }),
+      });
+      const data = await response.json();
+      setUserInfo({
+        followers: data.followerUser.followers,
+        followings: data.followerUser.followings,
+      });
+
+      setFollowClicked(false);
+
+      if (data.status !== 200) {
+        setFollowClicked(false);
+        throw new Error(data.message || "Something went wrong");
+      }
+      // Handle successful response, update state, etc.
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Use Effect
   useEffect(() => {
     if (
@@ -93,11 +123,11 @@ export default function MainProfile({
             </div>
             <div className="h-full pb-4 w-full bg-gray-600 flex flex-col justify-center gap-4 pt-2 ">
               <div className="w-full flex items-center justify-start px-6 gap-4 text-2xl">
-                <i className="fa-solid fa-gear text-white"></i>
+                <i className="fa-solid fa-gear text-white select-none"></i>
                 <Link href="/setting">Setting</Link>
               </div>
               <div className="w-full flex items-center justify-start px-6 gap-4 text-2xl">
-                <i className="fa-solid fa-info text-sm text-slate-600 border-2 bg-white rounded-full p-2 h-6 w-6 "></i>
+                <i className="fa-solid fa-info text-sm text-slate-600 border-2 bg-white rounded-full p-2 h-6 w-6 select-none"></i>
                 <Link href="/projectrepo">About</Link>
               </div>
             </div>
@@ -113,10 +143,10 @@ export default function MainProfile({
                   className="border-2 rounded-full bg-white h-5 w-5 flex items-center justify-center  "
                   href="/projectrepo"
                 >
-                  <i className="fa-solid fa-info text-sm text-slate-800"></i>
+                  <i className="fa-solid fa-info text-sm text-slate-800 select-none"></i>
                 </Link>
                 <i
-                  className="fa-solid fa-bars text-white text-lg"
+                  className="fa-solid fa-bars text-white text-lg select-none"
                   onClick={handleToggleBottomInfo}
                 ></i>
               </div>
@@ -128,13 +158,14 @@ export default function MainProfile({
             {/* common image for mobile & desktop */}
             <div className="border-2 rounded-full border-gray-500 p-1 w-fit ">
               <img
+                draggable="false"
                 src={user.image}
                 onLoad={() => setProgress(100)}
                 onLoadStart={() => {
                   setProgress(60);
                 }}
                 alt="notfound"
-                className="sm:h-40 sm:w-40 h-16 w-16 rounded-full object-cover cursor-pointer"
+                className="sm:h-40 sm:w-40 h-16 w-16 rounded-full object-cover cursor-pointer select-none"
                 onClick={() => setImageClick(true)}
               />
             </div>
@@ -144,13 +175,12 @@ export default function MainProfile({
                 className="h-screen w-screen backdrop-blur-lg flex items-center justify-center fixed top-0 left-0 z-50"
                 onClick={() => setImageClick(false)}
               >
-                <div className="h-52 w-52 lg:h-96 lg:w-96 rounded-full p-3 relative">
-                  <div className="h-full w-full rounded-full absolute -top-3 -left-3 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-spin"></div>
-                  <div className="h-full w-full rounded-full absolute top-8 left-8 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-spin"></div>
+                <div className="h-52 w-52 lg:h-96 lg:w-96 rounded-full p-3 ">
                   <img
+                  draggable="false"
                     src={user.image}
                     alt="not found"
-                    className="h-full w-full rounded-full object-cover absolute hover:scale-105 transition duration-300 "
+                    className="h-full w-full rounded-full object-cover border-4 p-1 hover:scale-105 transition duration-300 select-none"
                   />
                 </div>
               </div>
@@ -163,7 +193,7 @@ export default function MainProfile({
                 <div>@{user.username}</div>
                 {pathname === "/profile" ? (
                   <i
-                    className="fa-solid fa-pen-to-square cursor-pointer"
+                    className="fa-solid fa-pen-to-square cursor-pointer select-none"
                     onClick={() => {
                       router.push("/setting");
                     }}
@@ -184,13 +214,13 @@ export default function MainProfile({
             </div>
           </div>
           {/* For Desktop Profile */}
-          <div className="flex flex-col gap-4 sm:w-1/2 w-full">
+          <div className="flex flex-col gap-2 sm:w-1/2 w-full">
             <div className="hidden sm:flex items-center justify-between h-6">
               <div className="flex items-center justify-center">
                 <div>@{user.username}</div>
                 {pathname === "/profile" ? (
                   <i
-                    className="fa-solid fa-pen-to-square cursor-pointer hover:scale-110 ml-8 transition-all"
+                    className="fa-solid fa-pen-to-square cursor-pointer hover:scale-110 ml-8 transition-all select-none"
                     onClick={() => {
                       router.push("/setting");
                     }}
@@ -213,44 +243,54 @@ export default function MainProfile({
               <strong>
                 {user.given_name} {user.family_name}
               </strong>
-              <p className="w-full overflow-auto bg-transparent whitespace-pre-line text-xs ">
+              <p className="w-full overflow-auto bg-transparent whitespace-pre-line text-sm ">
                 {user.about}
               </p>
               {pathname === "/profile" ? null : (
                 <div className="mt-4 flex gap-4 mb-4">
-                  <button
-                    type="button"
-                    className={`${
-                      followClicked ||
-                      (UserInfo.followers &&
-                        (UserInfo.followers.includes(
+                  {!followClicked ? (
+                    <button
+                      type="button"
+                      className={`${
+                        UserInfo.followers &&
+                        UserInfo.followers.includes(
                           session?.user.id ||
                             localStorage.getItem("Sufferer-site-userId")
-                        )))
-                        ? "bg-slate-700"
-                        : "bg-blue-600 hover:scale-105 cursor-pointer"
-                    } w-fit text-sm p-4 py-1 rounded-lg  `}
-                    onClick={async () => {
-                      handleFollowUser();
-                      setFollowClicked(!followClicked);
-                      setUserInfo((prevUserInfo) => {
-                        const updatedFollowers =
-                          prevUserInfo.followers.includes("Temp value")
-                            ? prevUserInfo.followers.filter(
-                                (item) => item !== "Temp value"
-                              )
-                            : prevUserInfo.followers.concat(["Temp value"]);
-
-                        return {
-                          ...prevUserInfo,
-                          followers: updatedFollowers,
-                        };
-                      });
-                    }}
-                  >
-                    Follow
-                  </button>
-                  <div className="p-4 py-1 cursor-pointer rounded-lg bg-slate-700 w-fit hover:scale-105 text-sm">
+                        )
+                          ? "bg-slate-700"
+                          : "bg-blue-600 hover:scale-105 cursor-pointer"
+                      } w-24 text-sm p-4 py-1 rounded-lg select-none `}
+                      onClick={async () => {
+                        handleFollowUser();
+                      }}
+                    >
+                      Follow
+                    </button>
+                  ) : (
+                    <div className="bg-slate-600 cursor-wait select-none w-24 text-sm p-4 py-1 rounded-lg flex items-center justify-center">
+                      <svg
+                        className="w-5 h-5 text-white animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    </div>
+                  )}
+                  <div className="p-4 py-1 select-none cursor-pointer rounded-lg bg-slate-700 w-24 hover:scale-105 text-sm flex items-center justify-center">
                     Message
                   </div>
                 </div>
@@ -261,7 +301,7 @@ export default function MainProfile({
         {pathname === "/profile" ? (
           <div
             id="profile-navigation"
-            className="flex gap-8 w-fit items-center justify-center relative z-50"
+            className="flex gap-8 w-fit select-none items-center justify-center relative z-50 "
             ref={profileNavRef}
           >
             <div>Quotes</div>
@@ -271,14 +311,14 @@ export default function MainProfile({
         ) : (
           <div
             id="profile-navigation"
-            className="flex gap-8 w-fit items-center justify-center relative z-50 before:w-56"
+            className="flex gap-8 w-fit select-none items-center justify-center relative z-50 before:w-56"
             ref={profileNavRef}
           >
             <div>Quotes</div>
           </div>
         )}
         <div className="w-full mb-10">
-          <div className="">
+          <div className="w-full">
             <Quotes posts={data} section={section} setData={setData} />
           </div>
         </div>

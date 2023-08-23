@@ -102,7 +102,35 @@ export default function page({ params }) {
       setUsernameExists(null);
     }
   };
+  const checkUserName = async () => {
+    setLoading(true);
+    const response = await fetch(
+      `/api/users/checkusername/${session?.user.email}`
+    );
+    const data = await response.json();
+    if (data.foundUsername) {
+      router.push("/");
+      toast.info(`Username Already Available`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+    return data;
+  };
+  
   useEffect(() => {
+    if (status === "authenticated") {
+      checkUserName();
+    }
     if (status === "unauthenticated" || session?.user.id !== params.id) {
       setLoading(true);
       toast.warn(`Permission denied`, {
@@ -185,13 +213,13 @@ export default function page({ params }) {
             htmlFor="password"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Password
+            Password (must contain 8 characters)
           </label>
           <input
             type={showPassword ? "text" : "password"} // Toggle between "text" and "password"
             id="password"
             value={password}
-            max={8}
+            min={8}
             onChange={(e) => setPassword(e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Choose a password"

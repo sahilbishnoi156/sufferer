@@ -12,12 +12,19 @@ export default function QuoteItem({
   setPosts,
   posts,
   post,
+  section
 }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [postTime, setPostTime] = useState("");
   const router = useRouter();
   const [postLiked, setPostLiked] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [postInfo, setPostInfo] = useState({
+    likes:[],
+    comments:[],
+    shares:0,
+  });
   const [togglePostInfo, setTogglePostInfo] = useState(false);
 
   const handleDelete = async () => {
@@ -57,22 +64,62 @@ export default function QuoteItem({
     }
   };
 
-  const handleUserIdClick = () => {
-    if (creator._id === session?.user.id) return router.push(`/profile`);
-    router.push(`/profile/${creator._id}?name=${creator.username}`);
+  const handlePostLike = async () => {
+    try {
+      const response = await fetch(`/api/quote/like`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          userId: session?.user.id || localStorage.getItem("Sufferer-site-userId"),
+          postId: id,
+        }),
+      });
+      const data = await response.json();
+      setPostInfo({
+        likes: await data.likedPost.likes,
+        comments:await data.likedPost.comments,
+        shares: await data.likedPost.shares,
+      });
+
+      if (data.status !== 200) {
+        throw new Error(data.message || "Something went wrong");
+      }
+      // Handle successful response, update state, etc.
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsFetching(false); // Reset the flag after the request completes
+    }
+  };
+
+  const throttledHandlePostLike = async () => {
+    if (!isFetching) {
+      setIsFetching(true); // Set the flag to indicate an ongoing request
+      await handlePostLike();
+    }
   };
 
   const HandlePostLike = () => {
     if (postLiked) {
       setPostLiked(false);
+      throttledHandlePostLike();
     } else {
       setPostLiked(true);
+      throttledHandlePostLike();
     }
+  };
+
+
+  const handleUserIdClick = () => {
+    if (creator._id === session?.user.id) return router.push(`/profile`);
+    router.push(`/profile/${creator._id}?name=${creator.username}`);
   };
   const handleEditClick = () => {
     router.push(`/updatepost/?id=${id}`);
   };
   useEffect(() => {
+    if (post) {
+      setPostInfo({likes:post.likes, comments:post.comments, shares:post.shares})
+    }
     const today = new Date();
     const jsonDate = new Date(parseFloat(date)); // converting to date
 
@@ -93,7 +140,7 @@ export default function QuoteItem({
   }, [date, post]);
   return (
     <div
-      className="text-white sm:w-3/4 w-full h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between  "
+      className={`text-white ${section === "Trending" ? "lg:w-3/4" : "lg:w-3/4 w-full"} h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between `}
       id={id}
     >
       <div className="w-full h-fit p-2 sm:p-4">
@@ -103,12 +150,13 @@ export default function QuoteItem({
             onClick={handleUserIdClick}
           >
             <img
+              draggable="false"
               src={creator.image}
               alt="not found"
-              className="h-8 w-8 rounded-full object-cover"
+              className="h-8 w-8 rounded-full object-cover select-none"
             />
             <span className="flex items-center justify-center">
-              <div className="sm:text-lg text-sm flex items-center justify-center gap-0 sm:gap-1 sm:flex-row flex-col">
+              <div className="sm:text-lg text-sm flex items-center justify-center gap-0 sm:gap-1 sm:flex-row flex-col select-none">
                 @{creator.username}
                 <span className="text-slate-400 sm:inline hidden">·</span>
                 <span className="text-xs text-slate-400 sm:text-sm self-start sm:self-center h-full">
@@ -122,11 +170,11 @@ export default function QuoteItem({
               className="w-8 h-8 flex items-center justify-center cursor-pointer"
               onClick={() => setTogglePostInfo(true)}
             >
-              <i className="fa-solid fa-ellipsis-vertical fa-rotate-90 mr-2 cursor-pointer"></i>
+              <i className="fa-solid fa-ellipsis-vertical fa-rotate-90 mr-2 cursor-pointer select-none"></i>
             </div>
             {togglePostInfo && (
               <div
-                className="h-screen w-screen backdrop-blur-lg flex items-center justify-center fixed top-0 left-0 z-50"
+                className="h-screen w-screen backdrop-blur-lg flex items-center justify-center fixed top-0 left-0 z-50 select-none"
                 onClick={() => setTogglePostInfo(false)}
               >
                 <div className="h-fit p-2 border w-64 bg-black rounded-3xl relative">
@@ -214,7 +262,7 @@ export default function QuoteItem({
             <img
               src={post.image}
               alt="Not found"
-              className="w-full h-full object-cover  rounded-sm"
+              className="w-full h-full object-contain select-none  rounded-sm"
             />
           </div>
         </div>
@@ -222,23 +270,23 @@ export default function QuoteItem({
       <div className="w-full px-4">
         <div className="mt-2 flex justify-between items-center w-full text-xs ">
           <p className="flex gap-1 items-center justify-center">
-            <i className="fa-solid fa-heart"></i>0
+            <i className="fa-solid fa-heart"></i>{postInfo.likes && postInfo.likes.length}
           </p>
           <div className="flex gap-2">
             <p className="flex gap-1 items-center justify-center">
-              <i className="fa-regular fa-comment"></i>0
+              <i className="fa-regular fa-comment"></i>{postInfo.likes && postInfo.comments.length}
             </p>
             <p className="flex gap-1 items-center justify-center">
-              <i className="fa-solid fa-share cursor-pointer"></i>0
+              <i className="fa-solid fa-share cursor-pointer"></i>{postInfo.likes && (postInfo.shares || 0)}
             </p>
           </div>
         </div>
-        <div className="w-full h-[1px] bg-slate-500 self-center mt-2"></div>
+        {/* <div className="w-full h-[1px] bg-slate-500 self-center mt-2"></div> */}
         <div className="flex items-center justify-start gap-4 w-full py-2 sm:py-4">
           <div className="flex flex-col items-center justify-center">
             <i
               className={`fa-${
-                postLiked ? "solid" : "regular"
+                postInfo.likes && (postInfo.likes.includes(session?.user.id || localStorage.getItem("Sufferer-site-userId")) || postLiked) ? "solid" : "regular"
               } fa-heart cursor-pointer transition duration-300 text-lg sm:text-2xl`}
               onClick={HandlePostLike}
             ></i>

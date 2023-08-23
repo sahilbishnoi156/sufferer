@@ -84,7 +84,7 @@ export default function Home() {
           </InfiniteScroll>
         </div>
         <div
-          className="sm:block hidden"
+          className="xl:block hidden"
           id="side-profile"
           style={{ minWidth: "30%" }}
         >
