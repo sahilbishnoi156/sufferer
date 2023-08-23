@@ -42,7 +42,7 @@ export default function Home() {
     const newEndLimit = dataLimit + 4;
     const timestamp = new Date().getTime();
     const response = await fetch(
-      `/api/quote?sLimit=${newStartLimit}&eLimit=${dataLimit}&timestamp=${timestamp}`
+      `/api/quote?sLimit=${newStartLimit}&eLimit=${newEndLimit}&timestamp=${timestamp}`
     );
 
     const data = await response.json();
