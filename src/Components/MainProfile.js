@@ -1,7 +1,7 @@
 "use client";
 import "../styles/profile.css";
 import Quotes from "@/Components/Quotes";
-import SavedPosts from "@/Components/SavedPosts";
+import SavedPosts from "@/Components/PostType";
 import Loading from "../Components/Loading";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -26,8 +26,8 @@ export default function MainProfile({
   const [toggleBtmNav, setToggleBtmNav] = useState(true);
   const [imageClick, setImageClick] = useState(false);
   const [followClicked, setFollowClicked] = useState(false);
-  const [showQuotes, setShowQuotes] = useState(true);
   const [allPosts, setAllPosts] = useState([]);
+  const [postType, setPostType] = useState("userPosts")
 
   // Ref
   const profileNavRef = useRef();
@@ -319,10 +319,10 @@ export default function MainProfile({
             className="flex gap-8 w-fit select-none items-center justify-center relative z-50 "
             ref={profileNavRef}
           >
-            <div onClick={() => setShowQuotes(true)}>Quotes</div>
-            <div>Saved</div>
+            <div onClick={() => setPostType("userPosts")}>Posts</div>
+            <div onClick={() => setPostType("savedPosts")}>Saved</div>
             <div onClick={() => {
-              setShowQuotes(false);
+              setPostType("likedPosts")
               getAllPost();
             }}>Liked Posts</div>
           </div>
@@ -337,7 +337,7 @@ export default function MainProfile({
         )}
         <div className="w-full mb-10">
           <div className="w-full" id="profile-quotes">
-            {showQuotes ? (
+            {postType === "userPosts" ? (
               <Quotes
                 posts={currentUserPosts}
                 section={section}
@@ -348,7 +348,8 @@ export default function MainProfile({
                 allPosts={allPosts}
                 section={section}
                 setAllPosts={setAllPosts}
-                likedPosts={user.likedPosts}
+                postSection={postType === "likedPosts" ? user.likedPosts : user.savedPosts}
+                postType={postType}
               />
             )}
           </div>

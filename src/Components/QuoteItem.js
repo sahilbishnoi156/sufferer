@@ -21,6 +21,7 @@ export default function QuoteItem({
   const router = useRouter();
   const [postLiked, setPostLiked] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const [postSaved, setPostSaved] = useState(false);
   const [postInfo, setPostInfo] = useState({
     likes: [],
     comments: [],
@@ -82,6 +83,29 @@ export default function QuoteItem({
         shares: await data.likedPost.shares,
       });
 
+      if (data.status !== 200) {
+        throw new Error(data.message || "Something went wrong");
+      }
+      // Handle successful response, update state, etc.
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsFetching(false); // Reset the flag after the request completes
+    }
+  };
+
+  const handlePostSave = async () => {
+    try {
+      const response = await fetch(`/api/quote/save`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          userId:
+            session?.user.id || localStorage.getItem("Sufferer-site-userId"),
+          postId: id,
+        }),
+      });
+      const data = await response.json();
+      setPosts()
       if (data.status !== 200) {
         throw new Error(data.message || "Something went wrong");
       }
@@ -192,7 +216,9 @@ export default function QuoteItem({
                   <div className="w-full h-full">
                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 w-full h-full flex items-center justify-center gap-2 flex-col">
                       <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all">
-                        <i className="fa-regular fa-bookmark mr-2"></i>
+                        <i className={`fa-${postSaved ? "solid" : "regular"} fa-bookmark mr-2`} onClick={()=>setPostSaved(!postSaved)}>
+
+                        </i>
                         Save
                       </li>
                       <li className="w-full h-[1px] bg-slate-400"></li>
@@ -218,7 +244,7 @@ export default function QuoteItem({
                       ) : (
                         <></>
                       )}
-                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all text-red-500 animate-pulse">
+                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all text-red-500">
                         <i className="fa-regular fa-flag mr-2"></i>
                         Report Post
                       </li>

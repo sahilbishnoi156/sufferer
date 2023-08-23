@@ -1,15 +1,15 @@
 import React from "react";
 import QuoteItem from "./QuoteItem";
-export default function Quotes({ allPosts, section, likedPosts, setAllPosts }) {
+export default function Quotes({ allPosts, section, postSection, setAllPosts, postType }) {
   return (
     <>
       <div
         id="quote-area"
         className="flex items-center justify-center flex-col gap-6 mt-10"
       >
-        {likedPosts.length > 0 ? (
+        {(postSection.length) > 0 ? (
           allPosts.map((post) => {
-            if (likedPosts?.includes(`${post._id}`)) {
+            if (postSection?.includes(`${post._id}`)) {
               return (
                 <QuoteItem
                   key={post._id}
@@ -27,7 +27,7 @@ export default function Quotes({ allPosts, section, likedPosts, setAllPosts }) {
             }
           })
         ) : (
-          <div className="text-white">No Liked Posts</div>
+          <div className="text-white">No {postType === "postSection" ? "Liked" : "Saved"} Posts</div>
         )}
       </div>
     </>
