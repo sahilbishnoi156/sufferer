@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import ShowConnectedUser from "./ShowConnectedUser";
 
 export default function MainProfile({
   currentUserPosts,
@@ -27,6 +28,8 @@ export default function MainProfile({
   const [imageClick, setImageClick] = useState(false);
   const [followClicked, setFollowClicked] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowings, setShowFollowings] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [postType, setPostType] = useState("userPosts");
 
@@ -137,10 +140,22 @@ export default function MainProfile({
             </div>
             <div className="h-full pb-4 w-full bg-gray-600 flex flex-col justify-center gap-4 pt-2 ">
               <div className="w-full flex items-center justify-start text-2xl px-4">
-                <Link href="/setting" className="flex items-center justify-center gap-4"> <i className="fa-solid fa-gear text-white select-none text-lg"></i>Setting</Link>
+                <Link
+                  href="/setting"
+                  className="flex items-center justify-center gap-4"
+                >
+                  {" "}
+                  <i className="fa-solid fa-gear text-white select-none text-lg"></i>
+                  Setting
+                </Link>
               </div>
               <div className="w-full flex items-center justify-start px-4 gap-4 text-2xl">
-                <Link href="/projectrepo" className="flex items-center justify-center gap-4"><i className="fa-solid fa-question"></i>About</Link>
+                <Link
+                  href="/projectrepo"
+                  className="flex items-center justify-center gap-4"
+                >
+                  <i className="fa-solid fa-question"></i>About
+                </Link>
               </div>
             </div>
           </div>
@@ -216,12 +231,34 @@ export default function MainProfile({
               </div>
               <div className="flex sm:gap-8 gap-2 text-center text-xs">
                 <div>{currentUserPosts.length} Quotes</div>
-                <div>
+                <div onClick={()=>setShowFollowers(true)} className="cursor-pointer">
                   {UserInfo.followers && UserInfo.followers.length} Followers
                 </div>
-                <div>
+                {showFollowers && (
+                  <ShowConnectedUser
+                    userId={
+                      session?.user.id ||
+                      localStorage.getItem("Sufferer-site-userId")
+                    }
+                    tabType={"followers"}
+                    setProgress={setProgress}
+                    closeTab={setShowFollowers}
+                  />
+                )}
+                <div onClick={()=>setShowFollowings(true)} className="cursor-pointer">
                   {UserInfo.followers && UserInfo.followings.length} Followings
                 </div>
+                {showFollowings && (
+                <ShowConnectedUser
+                  userId={
+                    session?.user.id ||
+                    localStorage.getItem("Sufferer-site-userId")
+                  }
+                  tabType={"followings"}
+                  setProgress={setProgress}
+                  closeTab={setShowFollowings}
+                />
+              )}
               </div>
             </div>
           </div>
@@ -244,12 +281,34 @@ export default function MainProfile({
             </div>
             <div className="hidden gap-8 sm:flex">
               <div>{currentUserPosts.length} quote</div>
-              <div>
+              <div onClick={()=>setShowFollowers(true)} className="cursor-pointer">
                 {UserInfo.followers && UserInfo.followers.length} Followers
               </div>
-              <div>
+              {showFollowers && (
+                <ShowConnectedUser
+                  userId={
+                    session?.user.id ||
+                    localStorage.getItem("Sufferer-site-userId")
+                  }
+                  tabType={"followers"}
+                  setProgress={setProgress}
+                  closeTab={setShowFollowers}
+                />
+              )}
+              <div onClick={()=>setShowFollowings(true)} className="cursor-pointer">
                 {UserInfo.followers && UserInfo.followings.length} Followings
               </div>
+              {showFollowings && (
+                <ShowConnectedUser
+                  userId={
+                    session?.user.id ||
+                    localStorage.getItem("Sufferer-site-userId")
+                  }
+                  tabType={"followings"}
+                  setProgress={setProgress}
+                  closeTab={setShowFollowings}
+                />
+              )}
             </div>
             <div>
               <strong>

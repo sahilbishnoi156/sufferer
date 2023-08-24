@@ -22,7 +22,7 @@ export default function UserIds({
             alt="hg"
             className="h-10 w-10 rounded-full object-cover"
           />
-          <span>
+          <span className="flex items-start justify-center flex-col">
             <p className="text-lg">@{username}</p>
             <p className="text-gray-500 dark:text-gray-400 text-sm">
               {given_name} {family_name}
