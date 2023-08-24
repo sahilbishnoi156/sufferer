@@ -14,6 +14,7 @@ export default function Home() {
   const { data: session, status } = useSession();
   const [dataLimit, setDataLimit] = useState(4);
   const [currentUser, setCurrentUser] = useState({});
+  const [totalPosts, setTotalPosts] = useState(4)
   const [hasMoreData, setHasMoreData] = useState(true);
 
   const fetchData = async () => {
@@ -34,7 +35,7 @@ export default function Home() {
         }`
       );
       const user = await userResponse.json();
-  
+      setTotalPosts(postsData.totalPosts)
       setDataLoading(false);
       setAllPosts(postsData.posts);
       setCurrentUser(user);
@@ -66,7 +67,6 @@ export default function Home() {
     </div>
   );
   
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -84,7 +84,7 @@ export default function Home() {
         />
         <div className="w-full sm:pl-20 p-2" id="quotes-section">
           <InfiniteScroll
-            dataLength={allPosts.length}
+            dataLength={totalPosts}
             next={fetchMoreData}
             hasMore={hasMoreData}
             loader={<Loader />}

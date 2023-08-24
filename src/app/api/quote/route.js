@@ -1,29 +1,36 @@
-import Post from "../../../models/post";
 import { connectToDB } from "../../../utils/database";
+import Post from "../../../models/post";
+
+const DEFAULT_START_LIMIT = 0;
+const DEFAULT_END_LIMIT = 4;
+
+const fetchPosts = async (sLimit, eLimit) => {
+  await connectToDB();
+  
+  const allPosts = await Post.find({}).populate("creator");
+  const totalPosts = allPosts.length;
+  
+  const slicedPosts = allPosts.reverse().slice(sLimit, eLimit);
+  return { slicedPosts, totalPosts };
+};
 
 export const GET = async (request) => {
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const sLimit = parseInt(searchParams.get("sLimit")) || DEFAULT_START_LIMIT;
+  const eLimit = parseInt(searchParams.get("eLimit")) || DEFAULT_END_LIMIT;
   try {
-    await connectToDB();
-    const url = new URL(request.url);
-    const searchParams = new URLSearchParams(url.search);
-    const sLimit = searchParams.get("sLimit") || 0;
-    const eLimit = searchParams.get("eLimit") || 4;
-    const allPosts = await Post.find({}).populate("creator");
-    const totalPosts = allPosts.length;
-    return new Response(
-      JSON.stringify({
-        posts: allPosts.reverse().slice(sLimit, eLimit),
-        totalPosts,
-      }),
-      { status: 200 }
-    );
+    const { slicedPosts, totalPosts } = await fetchPosts(sLimit, eLimit);
+    const responseBody = {
+      posts: slicedPosts,
+      totalPosts,
+    };
+    return new Response(JSON.stringify(responseBody), { status: 200 });
   } catch (error) {
-    return new Response(
-      JSON.stringify({
-        error: "Failed to get posts",
-        errorMessage: error.message,
-      }),
-      { status: 500 }
-    );
+    const errorResponse = {
+      error: "Failed to get posts",
+      errorMessage: error.message,
+    };
+    return new Response(JSON.stringify(errorResponse), { status: 500 });
   }
 };
