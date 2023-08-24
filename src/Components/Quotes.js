@@ -18,7 +18,7 @@ export default function Quotes({
         section === "Trending"
           ? "flex justify-center items-center flex-col gap-6 p-2 py-8 pb-16 sm:p-8"
           : "flex items-center justify-center flex-col gap-6 mt-10"
-      }`}
+      } relative`}
     >
       {section === "Trending" && (
         <div className="w-3/4 self-center flex items-center justify-center flex-col gap-2">

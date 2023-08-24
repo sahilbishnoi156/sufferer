@@ -203,7 +203,7 @@ export default function QuoteItem({
   }, [date, post]);
   return (
     <div
-      className={`text-white lg:w-3/4 w-full h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between overflow-hidden`}
+      className={`text-white lg:w-3/4 w-full h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between overflow-hidden relative`}
       id={id}
     >
       <div className="w-full h-fit p-2 sm:p-4">
@@ -229,7 +229,7 @@ export default function QuoteItem({
               </div>
             </span>
           </div>
-          <div className="flex gap-6 items-center justify-center">
+          <div className="flex gap-6 items-center justify-center relative">
             <div
               className="w-8 h-8 flex items-center justify-center cursor-pointer"
               onClick={() => setTogglePostInfo(true)}
@@ -240,10 +240,9 @@ export default function QuoteItem({
             {/* Post Info */}
             {togglePostInfo && (
               <div
-                className="h-screen w-full flex items-center justify-center backdrop-blur-sm fixed top-0 left-0 z-50 select-none"
+                className="h-screen w-full flex items-center justify-center backdrop-blur-lg fixed left-0 z-50 select-none"
                 id="post-info"
               >
-                <div className="bg-black w-full h-screen fixed top-0 left-0 z-30 opacity-60"></div>
                 <div
                   className="h-fit p-2 w-64 bg-slate-800 rounded-3xl relative z-40"
                   id="post-info"

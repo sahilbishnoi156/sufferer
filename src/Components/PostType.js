@@ -6,7 +6,7 @@ export default function Quotes({ allPosts, section, postSection, setAllPosts, po
     <>
       <div
         id="quote-area"
-        className="flex items-center justify-center flex-col gap-6 mt-10"
+        className="flex items-center justify-center flex-col gap-6 mt-10 relative"
       >
         {(postSection.length) > 0 ? (
           allPosts.map((post) => {

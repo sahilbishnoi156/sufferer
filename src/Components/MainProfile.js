@@ -84,6 +84,7 @@ export default function MainProfile({
 
   // Use Effect
   useEffect(() => {
+    console.log(session?.user);
     if (
       status === "authenticated" ||
       localStorage.getItem("Sufferer-site-authToken")
@@ -141,7 +142,6 @@ export default function MainProfile({
                   href="/setting"
                   className="flex items-center justify-center gap-4"
                 >
-                  {" "}
                   <i className="fa-solid fa-gear text-white select-none text-lg"></i>
                   Setting
                 </Link>
@@ -161,8 +161,16 @@ export default function MainProfile({
         <div className="w-full h-14 sm:hidden block">
           <div className="w-full h-14 fixed backdrop-blur-lg sm:hidden border-b-2 border-gray-800 top-0 left-0 z-50">
             <div className="flex items-center justify-between w-full px-8 h-full">
-              <div>{user.username}</div>
+              <div>{session?.user.name}</div>
               <div className="flex gap-4 items-center justify-between">
+                <Link
+                  href="/notification"
+                  className="text-xl cursor-pointer text-white select-none"
+                  scroll={false}
+                  replace
+                >
+                  <i className="text-xl fa-solid fa-bell"></i>
+                </Link>
                 <Link
                   className="border-2 rounded-full bg-white h-5 w-5 flex items-center justify-center  "
                   href="/projectrepo"
@@ -262,16 +270,10 @@ export default function MainProfile({
             </div>
             <div className="hidden gap-8 sm:flex">
               <div>{currentUserPosts.length} quote</div>
-              <Link
-                href={`/${user._id}/followers`}
-                className="cursor-pointer"
-              >
+              <Link href={`/${user._id}/followers`} className="cursor-pointer">
                 {UserInfo.followers && UserInfo.followers.length} Followers
               </Link>
-              <Link
-                href={`/${user._id}/followings`}
-                className="cursor-pointer"
-              >
+              <Link href={`/${user._id}/followings`} className="cursor-pointer">
                 {UserInfo.followers && UserInfo.followings.length} Followings
               </Link>
             </div>
@@ -378,7 +380,7 @@ export default function MainProfile({
           </div>
         )}
         <div className="w-full mb-10  relative z-10">
-          <div className="w-full" id="profile-quotes">
+          <div className="w-full relative" id="profile-quotes">
             {postType === "userPosts" ? (
               <Quotes
                 posts={currentUserPosts}
