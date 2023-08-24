@@ -8,36 +8,34 @@ import { useSession } from "next-auth/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function Home() {
-  const [allPosts, setAllPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [progress, setProgress] = useState(0);
   const [dataLoading, setDataLoading] = useState(false);
   const { data: session, status } = useSession();
-  const [dataLimit, setDataLimit] = useState(4);
   const [currentUser, setCurrentUser] = useState({});
-  const [totalPosts, setTotalPosts] = useState(4)
-  const [hasMoreData, setHasMoreData] = useState(true);
+  const [hasMoreData, setHasMoreData] = useState(true); 
 
   const fetchData = async () => {
     try {
       setDataLoading(true);
       setProgress(30);
   
-      const timestamp = new Date().getTime();
+      // const timestamp = new Date().getTime();
   
       const postsResponse = await fetch(
-        `/api/quote?sLimit=${0}&eLimit=${dataLimit}&timestamp=${timestamp}`
+        `/api/quote?_limit=4`
       );
       const postsData = await postsResponse.json();
-  
+      setProgress(40);
       const userResponse = await fetch(
         `/api/users/getUser/${
           session?.user.id || localStorage.getItem("Sufferer-site-userId")
         }`
       );
+      setProgress(80);
       const user = await userResponse.json();
-      setTotalPosts(postsData.totalPosts)
       setDataLoading(false);
-      setAllPosts(postsData.posts);
+      setPosts(postsData.posts);
       setCurrentUser(user);
       setProgress(100);
     } catch (error) {
@@ -47,17 +45,12 @@ export default function Home() {
   
 
   const fetchMoreData = async () => {
-    const newStartLimit = dataLimit;
-    const newEndLimit = newStartLimit + 4;
-    const timestamp = new Date().getTime();
     const response = await fetch(
-      `/api/quote?sLimit=${newStartLimit}&eLimit=${newEndLimit}&timestamp=${timestamp}`
+      `/api/quote?_start=${posts.length}&_limit=4`
     );
-  
     const data = await response.json();
-    setAllPosts((prevPosts) => [...prevPosts, ...data.posts]);
-    setDataLimit(newEndLimit);
-    setHasMoreData(data.totalPosts > newEndLimit);
+    setPosts((prevPosts) => [...prevPosts, ...data.posts]);
+    setHasMoreData(data.totalPosts > posts.length);
   };
   
 
@@ -84,13 +77,13 @@ export default function Home() {
         />
         <div className="w-full sm:pl-20 p-2" id="quotes-section">
           <InfiniteScroll
-            dataLength={totalPosts}
+            dataLength={posts.length}
             next={fetchMoreData}
             hasMore={hasMoreData}
             loader={<Loader />}
           >
             <Quotes
-              posts={allPosts}
+              posts={posts}
               section={"Trending"}
               dataLoading={dataLoading}
               currentUser={currentUser}

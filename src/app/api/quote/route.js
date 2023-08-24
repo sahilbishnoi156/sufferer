@@ -2,25 +2,23 @@ import { connectToDB } from "../../../utils/database";
 import Post from "../../../models/post";
 
 const DEFAULT_START_LIMIT = 0;
-const DEFAULT_END_LIMIT = 4;
 
-const fetchPosts = async (sLimit, eLimit) => {
+const fetchPosts = async (_start, _limit) => {
   await connectToDB();
   
   const allPosts = await Post.find({}).populate("creator");
   const totalPosts = allPosts.length;
-  
-  const slicedPosts = allPosts.reverse().slice(sLimit, eLimit);
+  const slicedPosts = allPosts.reverse().slice(_start, _start + _limit);
   return { slicedPosts, totalPosts };
 };
 
 export const GET = async (request) => {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
-  const sLimit = parseInt(searchParams.get("sLimit")) || DEFAULT_START_LIMIT;
-  const eLimit = parseInt(searchParams.get("eLimit")) || DEFAULT_END_LIMIT;
+  const _start = parseInt(searchParams.get("_start")) || DEFAULT_START_LIMIT;
+  const _limit = parseInt(searchParams.get("_limit")) || 4;
   try {
-    const { slicedPosts, totalPosts } = await fetchPosts(sLimit, eLimit);
+    const { slicedPosts, totalPosts } = await fetchPosts(_start, _limit);
     const responseBody = {
       posts: slicedPosts,
       totalPosts,
