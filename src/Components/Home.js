@@ -27,8 +27,8 @@ export default function Home() {
       setProgress(40);
       const userResponse = await fetch(
         `/api/users/getUser/${
-          session?.user.id || localStorage.getItem("Sufferer-site-userId")
-        }`,{next:{revalidate:60}}
+          await session?.user.id || localStorage.getItem("Sufferer-site-userId")
+        }`
       );
       setProgress(80);
       const user = await userResponse.json();

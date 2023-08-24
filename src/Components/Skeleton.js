@@ -104,7 +104,6 @@ export default function Skeleton({ type }) {
       {type === "quotes" ? (
         <>
           <QuoteSkelton />
-          <QuoteSkelton />
         </>
       ) : type === "sideProfile" ? (
         <>

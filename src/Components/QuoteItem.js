@@ -4,9 +4,9 @@ import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import "../styles/profile.css";
+import Link from "next/link";
 
 export default function QuoteItem({
-  title,
   creator,
   date,
   id,
@@ -15,7 +15,6 @@ export default function QuoteItem({
   post,
   currentUser,
   setCurrentUser,
-  section,
 }) {
   const pathname = usePathname();
   const { data: session } = useSession();
@@ -25,6 +24,8 @@ export default function QuoteItem({
   const [postLiked, setPostLiked] = useState(false);
   const [isFetchingSave, setIsFetchingSave] = useState(false);
   const [postSaved, setPostSaved] = useState(false);
+  const [textCopied, setTextCopied] = useState(false);
+  const [reportPost, setReportPost] = useState(false)
   const [postInfo, setPostInfo] = useState({
     likes: [],
     comments: [],
@@ -33,7 +34,7 @@ export default function QuoteItem({
   const [togglePostInfo, setTogglePostInfo] = useState(false);
 
   const handleDelete = async () => {
-    const hasConfirmed = confirm(`Do your really want to delete ${title}`);
+    const hasConfirmed = confirm(`Do your really want to delete this post`);
 
     if (hasConfirmed) {
       toast.info(`Post Deleted`, {
@@ -107,7 +108,7 @@ export default function QuoteItem({
   const handlePostSaving = async () => {
     // Optimistic UI update
     setPostSaved(!postSaved);
-    
+
     try {
       const response = await fetch(`/api/quote/save`, {
         method: "PATCH",
@@ -148,6 +149,11 @@ export default function QuoteItem({
       setIsFetchingLike(true); // Set the flag to indicate an ongoing request
       await handlePostLiking();
     }
+  };
+
+  const handleCopyLink = async () => {
+    setTextCopied(true);
+    navigator.clipboard.writeText(window.location.href);
   };
 
   const HandlePostLike = () => {
@@ -197,9 +203,7 @@ export default function QuoteItem({
   }, [date, post]);
   return (
     <div
-      className={`text-white ${
-        section === "Trending" ? "lg:w-3/4 w-full" : "lg:w-3/4 w-full"
-      } h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between overflow-hidden`}
+      className={`text-white lg:w-3/4 w-full h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between overflow-hidden`}
       id={id}
     >
       <div className="w-full h-fit p-2 sm:p-4">
@@ -255,9 +259,9 @@ export default function QuoteItem({
                       >
                         <i
                           className={`fa-${
-                            postSaved || (currentUser.savedPosts &&
+                            postSaved ||
+                            (currentUser.savedPosts &&
                               currentUser.savedPosts.includes(id))
-                            
                               ? "solid"
                               : "regular"
                           } fa-bookmark mr-2`}
@@ -287,19 +291,34 @@ export default function QuoteItem({
                       ) : (
                         <></>
                       )}
-                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all text-red-500 brightness-150">
-                        <i className="fa-regular fa-flag mr-2"></i>
-                        Report Post
+                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all text-red-500 brightness-150" onClick={()=>setReportPost(!reportPost)}>
+                        {reportPost ? <><i className="fa-regular fa-circle-check mr-2 "></i>Reported</> : <> <i className="fa-regular fa-flag mr-2"></i>
+                        Report Post</>}
+                       
+                      </li>
+                      <li className="w-full h-[1px] bg-slate-400"></li>
+                      <li
+                        className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
+                        onClick={handleCopyLink}
+                      >
+                        {!textCopied ? (
+                          <>
+                            <i className="fa-regular fa-copy mr-2"></i>
+                            Copy Link
+                          </>
+                        ) : (
+                          <>
+                            <i className="fa-regular fa-circle-check mr-2 "></i>
+                            Copied
+                          </>
+                        )}
                       </li>
                       <li className="w-full h-[1px] bg-slate-400"></li>
                       <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all">
-                        <i className="fa-regular fa-copy mr-2"></i>
-                        Copy Link
-                      </li>
-                      <li className="w-full h-[1px] bg-slate-400"></li>
-                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all">
-                        <i className="fa-regular fa-eye-slash mr-2"></i>I don't
-                        want to see this
+                        <Link href={`/post/${id}`} className="h-full w-full">
+                          <i className="fa-regular fa-eye-slash mr-2"></i>Go to
+                          post
+                        </Link>
                       </li>
                       <li className="w-full h-[1px] bg-slate-400"></li>
                       <li
@@ -334,6 +353,7 @@ export default function QuoteItem({
             <img
               src={post.image}
               alt="Not found"
+              draggable="false"
               className="w-full max-h-96 h-full object-contain select-none rounded-sm"
             />
           </div>
