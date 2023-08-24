@@ -1,14 +1,13 @@
 "use client";
 import "../styles/globals.css";
-import { useEffect, useState, useRef } from "react";
-import { signIn, getProviders, useSession } from "next-auth/react";
+import { useState, useRef } from "react";
+import { signIn, useSession } from "next-auth/react";
+import Loading from "./Loading";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import Loading from "./Loading";
 
-export default function Login() {
-  const [providers, setProviders] = useState(null);
+export default function Login({providers}) {
   const [loading, setLoading] = useState(false);
   const [user_email, setUser_email] = useState("");
   const [user_password, setUser_password] = useState("");
@@ -22,38 +21,6 @@ export default function Login() {
     passwordRef.current.type =
       passwordRef.current.type === "password" ? "text" : "password";
   };
-
-  useEffect(() => {
-    const checkUserName = async () => {
-      setLoading(true);
-      const response = await fetch(
-        `/api/users/checkusername/${session?.user.email}`
-      );
-      const data = await response.json();
-      if (data.foundUsername) {
-        router.push("/");
-        setLoading(false);
-      } else {
-        router.push(`/login/getusername/${session?.user.id}`);
-        setLoading(false);
-      }
-      return data;
-    };
-    const setUpProviders = async () => {
-      setLoading(true);
-      const response = await getProviders();
-      setProviders(response);
-      setLoading(false);
-    };
-    if (localStorage.getItem("Sufferer-site-authToken")) {
-      router.push("/");
-      
-    } else if (status === "authenticated") {
-      setLoading(true);
-      checkUserName();
-    }
-    setUpProviders();
-  }, [status]);
 
   // Handling Login
   const handleLoginSubmit = async (e) => {
@@ -70,7 +37,6 @@ export default function Login() {
           password: user_password,
         }),
       });
-
       const data = await response.json();
       setLoading(false);
       if (!data.userFound) {
@@ -118,9 +84,8 @@ export default function Login() {
       console.log(error);
     }
   };
-  if (status === "loading" || loading) {
-    return <Loading />;
-  }
+  
+  // Continue wit google
   const continueWithGoogle = async (id) => {
     setLoading(true);
     try {
@@ -148,10 +113,12 @@ export default function Login() {
       });
       console.log(error);
     }
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
   };
+
+  
+  if (status === "loading" || loading) {
+    return <Loading />;
+  }
   return (
     <div className="flex sm:flex-row flex-col-reverse gap-16 sm:gap-2 w-full h-screen text-white items-center justify-start p-6 sm:p-16 bg-black">
       <div className="sm:w-2/5 w-full flex flex-col items-center sm:justify-center justify-between h-full gap-8  ">
@@ -164,10 +131,12 @@ export default function Login() {
               At Sufferer, we believe in the extraordinary power of quotes to
               inspire, motivate, and uplift.
             </p>
-              <div className="h-12"></div>
+            <div className="h-12"></div>
           </div>
         </div>
-        <div className="text-slate-400 sm:hidden block">----------OR----------</div>
+        <div className="text-slate-400 sm:hidden block">
+          ----------OR----------
+        </div>
         <div className="flex flex-col gap-4 w-full ">
           {providers &&
             Object.values(providers).map((provider) => (
@@ -241,7 +210,9 @@ export default function Login() {
           Don't have an account ?
         </Link>
       </div>
-      <div className="text-slate-400 [writing-mode:vertical-lr] relative left-14 sm:block hidden">-----------------OR-----------------</div>
+      <div className="text-slate-400 [writing-mode:vertical-lr] relative left-14 sm:block hidden">
+        -----------------OR-----------------
+      </div>
       <div className="h-full sm:w-3/5  w-full flex flex-col items-center justify-center sm:gap-16 gap-4 sm:mt-0 mt-10 ">
         <div className="w-full items-center justify-center flex">
           <span className="text-6xl" id="site-heading">
@@ -346,11 +317,10 @@ export default function Login() {
             >
               Log In
             </button>
-            
           )}
           <Link className="text-blue-400 sm:hidden block mt-4" href="/register">
-          Don't have an account ?
-        </Link>
+            Don't have an account ?
+          </Link>
         </form>
       </div>
     </div>

@@ -1,14 +1,12 @@
 "use client";
 import "../styles/profile.css";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Quotes from "@/Components/Quotes";
 import SavedPosts from "@/Components/PostType";
 import Loading from "../Components/Loading";
-import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import ShowConnectedUser from "./ShowConnectedUser";
 
 export default function MainProfile({
   currentUserPosts,
@@ -28,8 +26,6 @@ export default function MainProfile({
   const [imageClick, setImageClick] = useState(false);
   const [followClicked, setFollowClicked] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
-  const [showFollowers, setShowFollowers] = useState(false);
-  const [showFollowings, setShowFollowings] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [postType, setPostType] = useState("userPosts");
 
@@ -56,6 +52,7 @@ export default function MainProfile({
     setProgress(100);
   };
 
+  // Handling Clicking on followers
   const handleFollowUser = async () => {
     setFollowClicked(true);
     try {
@@ -99,8 +96,8 @@ export default function MainProfile({
     ) {
       router.push("/");
     }
-    // Profile navigation
 
+    // Profile navigation
     profileNavRef.current.addEventListener("click", (e) => {
       const button = e.target.closest("div");
       if (!button) return;
@@ -124,7 +121,7 @@ export default function MainProfile({
     <>
       <div className="sm:w-5/6 lg:w-5/6 xl:5/6 w-full h-full text-white flex flex-col justify-center items-center gap-2 px-4 ">
         <div
-          className={`sm:hidden fixed bottom-0 left-0 w-screen h-fit px-4 overflow-hidden mb-12 ${
+          className={`sm:hidden fixed bottom-0 left-0 w-screen h-fit px-4 mb-12 ${
             toggleBtmNav ? "-z-50" : "z-30"
           }`}
         >
@@ -231,34 +228,18 @@ export default function MainProfile({
               </div>
               <div className="flex sm:gap-8 gap-2 text-center text-xs">
                 <div>{currentUserPosts.length} Quotes</div>
-                <div onClick={()=>setShowFollowers(true)} className="cursor-pointer">
+                <Link
+                  href={`/${user._id}/followers`}
+                  className="cursor-pointer"
+                >
                   {UserInfo.followers && UserInfo.followers.length} Followers
-                </div>
-                {showFollowers && (
-                  <ShowConnectedUser
-                    userId={
-                      session?.user.id ||
-                      localStorage.getItem("Sufferer-site-userId")
-                    }
-                    tabType={"followers"}
-                    setProgress={setProgress}
-                    closeTab={setShowFollowers}
-                  />
-                )}
-                <div onClick={()=>setShowFollowings(true)} className="cursor-pointer">
+                </Link>
+                <Link
+                  href={`/${user._id}/followings`}
+                  className="cursor-pointer"
+                >
                   {UserInfo.followers && UserInfo.followings.length} Followings
-                </div>
-                {showFollowings && (
-                <ShowConnectedUser
-                  userId={
-                    session?.user.id ||
-                    localStorage.getItem("Sufferer-site-userId")
-                  }
-                  tabType={"followings"}
-                  setProgress={setProgress}
-                  closeTab={setShowFollowings}
-                />
-              )}
+                </Link>
               </div>
             </div>
           </div>
@@ -281,34 +262,18 @@ export default function MainProfile({
             </div>
             <div className="hidden gap-8 sm:flex">
               <div>{currentUserPosts.length} quote</div>
-              <div onClick={()=>setShowFollowers(true)} className="cursor-pointer">
+              <Link
+                href={`/${user._id}/followers`}
+                className="cursor-pointer"
+              >
                 {UserInfo.followers && UserInfo.followers.length} Followers
-              </div>
-              {showFollowers && (
-                <ShowConnectedUser
-                  userId={
-                    session?.user.id ||
-                    localStorage.getItem("Sufferer-site-userId")
-                  }
-                  tabType={"followers"}
-                  setProgress={setProgress}
-                  closeTab={setShowFollowers}
-                />
-              )}
-              <div onClick={()=>setShowFollowings(true)} className="cursor-pointer">
+              </Link>
+              <Link
+                href={`/${user._id}/followings`}
+                className="cursor-pointer"
+              >
                 {UserInfo.followers && UserInfo.followings.length} Followings
-              </div>
-              {showFollowings && (
-                <ShowConnectedUser
-                  userId={
-                    session?.user.id ||
-                    localStorage.getItem("Sufferer-site-userId")
-                  }
-                  tabType={"followings"}
-                  setProgress={setProgress}
-                  closeTab={setShowFollowings}
-                />
-              )}
+              </Link>
             </div>
             <div>
               <strong>

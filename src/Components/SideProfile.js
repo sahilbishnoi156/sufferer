@@ -50,6 +50,7 @@ export default function SideProfile({ session, currentUser }) {
     <div className="h-screen flex flex-col justify-evenly gap-10 px-8 py-12 fixed border-l-2 border-gray-700 select-none">
       {!dataLoading ? (
         <Link
+          replace
           href="/profile"
           data-te-toggle="tooltip"
           data-te-placement="bottom"

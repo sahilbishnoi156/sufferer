@@ -1,11 +1,9 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [navToggle, setNavToggle] = useState(false);
-  const router = useRouter();
   const headingRef = useRef(null);
   const openStyle = {
     transition: "1s",
@@ -57,6 +55,7 @@ export default function Navbar() {
         <div className="flex justify-center items-center transition-all">
           <Link
             href="/"
+            replace
             className="text-3xl h-full"
             style={{ height: "72px !important" }}
             
@@ -94,7 +93,7 @@ export default function Navbar() {
           <Link
             href="/search"
             className="text-xl flex items-start justify-start gap-4  h-6 "
-            
+            replace
             scroll={false}
           >
             <i className="text-xl fa-solid fa-magnifying-glass"></i>{" "}
@@ -109,6 +108,7 @@ export default function Navbar() {
             href="/message"
             className="text-xl flex items-start justify-start gap-4 h-6  "
             scroll={false}
+            replace
           >
             <i className="text-xl fa-regular fa-message"></i>{" "}
             <span

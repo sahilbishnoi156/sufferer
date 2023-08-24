@@ -13,24 +13,22 @@ export default function Home() {
   const [dataLoading, setDataLoading] = useState(false);
   const { data: session, status } = useSession();
   const [currentUser, setCurrentUser] = useState({});
-  const [hasMoreData, setHasMoreData] = useState(true); 
+  const [hasMoreData, setHasMoreData] = useState(true);
 
   const fetchData = async () => {
     try {
       setDataLoading(true);
       setProgress(30);
-  
+
       // const timestamp = new Date().getTime();
-  
-      const postsResponse = await fetch(
-        `/api/quote?_limit=4`
-      );
+
+      const postsResponse = await fetch(`/api/quote?_limit=4`,{next:{revalidate:60}});
       const postsData = await postsResponse.json();
       setProgress(40);
       const userResponse = await fetch(
         `/api/users/getUser/${
           session?.user.id || localStorage.getItem("Sufferer-site-userId")
-        }`
+        }`,{next:{revalidate:60}}
       );
       setProgress(80);
       const user = await userResponse.json();
@@ -42,26 +40,24 @@ export default function Home() {
       console.log("Failed to get data", error);
     }
   };
-  
 
   const fetchMoreData = async () => {
-    const response = await fetch(
-      `/api/quote?_start=${posts.length}&_limit=4`
-    );
+    const response = await fetch(`/api/quote?_start=${posts.length}&_limit=4`);
     const data = await response.json();
     setPosts((prevPosts) => [...prevPosts, ...data.posts]);
     setHasMoreData(data.totalPosts > posts.length);
   };
-  
 
   const Loader = () => (
     <div className="w-full flex items-center justify-center">
       <h2 className="text-white">Loading...</h2>
     </div>
   );
-  
+
   useEffect(() => {
-    fetchData();
+    if (posts.length <= 0) {
+      fetchData();
+    }
   }, []);
 
   if (status === "loading") {
@@ -96,10 +92,7 @@ export default function Home() {
           id="side-profile"
           style={{ minWidth: "30%" }}
         >
-          <SideProfile
-            session={session}
-            currentUser={currentUser}
-          />
+          <SideProfile session={session} currentUser={currentUser} />
         </div>
       </div>
     </>
