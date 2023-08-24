@@ -153,7 +153,7 @@ export default function QuoteItem({
 
   const handleCopyLink = async () => {
     setTextCopied(true);
-    navigator.clipboard.writeText(`http://localhost:3000/post/${id}`);
+    navigator.clipboard.writeText(`https://sufferer.vercel.app/post/${id}`);
   };
 
   const HandlePostLike = () => {
