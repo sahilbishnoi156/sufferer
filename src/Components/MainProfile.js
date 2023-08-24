@@ -385,6 +385,7 @@ export default function MainProfile({
                 section={section}
                 currentUser={currentUser}
                 setCurrentUser={setCurrentUser}
+                pathname={pathname}
               />
             ) : (
               <SavedPosts

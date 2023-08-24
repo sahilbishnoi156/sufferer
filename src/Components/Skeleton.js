@@ -4,7 +4,7 @@ const QuoteSkelton = () => {
   return (
     <div
       role="status"
-      className=" flex flex-col gap-4 p-4 border border-gray-200 rounded-2xl shadow animate-pulse md:p-2 dark:border-gray-700 w-3/4"
+      className=" flex flex-col gap-4 p-4 border border-gray-200 rounded-2xl shadow animate-pulse md:p-2 dark:border-gray-700 w-3/4 h-full"
     >
       <div className="flex items-center mt-4 space-x-3 border-b-2 pb-2 border-gray-700">
         <svg

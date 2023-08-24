@@ -153,7 +153,7 @@ export default function QuoteItem({
 
   const handleCopyLink = async () => {
     setTextCopied(true);
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(`http://localhost:3000/post/${id}`);
   };
 
   const HandlePostLike = () => {

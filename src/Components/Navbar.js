@@ -45,7 +45,7 @@ export default function Navbar() {
   }, [navToggle]);
   return (
     <nav
-      className={`h-12 sm:h-screen flex justify-between items-start flex-col bg-black ${
+      className={`h-12 sm:h-screen flex justify-between items-center flex-col bg-black ${
         navToggle ? "w-60" : "w-16"
       } text-white px-5 py-8 border-r-2 border-gray-700 h-screen fixed transition-all duration-500`}
     >
@@ -72,7 +72,7 @@ export default function Navbar() {
           </Link>
         </div>
         <div
-          className="flex justify-center items-start flex-col gap-16"
+          className="flex justify-center items-start flex-col gap-12"
           style={{ height: "304px !important" }}
           id="navigation-icons"
         >
@@ -119,6 +119,20 @@ export default function Navbar() {
             </span>
           </Link>
           <Link
+            href="/notification"
+            className="text-xl flex items-start justify-start gap-4 h-6  "
+            scroll={false}
+            replace
+          >
+            <i className="text-xl fa-solid fa-bell"></i>
+            <span
+              className={` navigation-items overflow-hidden`}
+              style={navToggle ? openStyle : closeStyle}
+            >
+              Notification
+            </span>
+          </Link>
+          <Link
             href={`/profile`}
             replace
             className="text-xl flex items-start justify-start gap-4 h-6  "
@@ -148,7 +162,7 @@ export default function Navbar() {
             className={` navigation-items overflow-hidden `}
             style={navToggle ? openStyle : closeStyle}
           >
-            Setting
+            Settings
           </span>
         </Link>
         <Link

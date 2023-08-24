@@ -19,15 +19,16 @@ export default function Home() {
     try {
       setDataLoading(true);
       setProgress(30);
-
       // const timestamp = new Date().getTime();
-
-      const postsResponse = await fetch(`/api/quote?_limit=4`,{next:{revalidate:60}});
+      const postsResponse = await fetch(`/api/quote?_limit=4`, {
+        next: { revalidate: 60 },
+      });
       const postsData = await postsResponse.json();
       setProgress(40);
       const userResponse = await fetch(
         `/api/users/getUser/${
-          await session?.user.id || localStorage.getItem("Sufferer-site-userId")
+          (await session?.user.id) ||
+          localStorage.getItem("Sufferer-site-userId")
         }`
       );
       setProgress(80);
@@ -55,10 +56,14 @@ export default function Home() {
   );
 
   useEffect(() => {
-    if (posts.length <= 0) {
-      fetchData();
+    if (session || localStorage.getItem("Sufferer-site-authToken")) {
+      if (posts.length <= 0) {
+        fetchData();
+      }
+    } else {
+      setDataLoading(true);
     }
-  }, []);
+  }, [session]);
 
   if (status === "loading") {
     return <Loading />;
@@ -84,6 +89,7 @@ export default function Home() {
               dataLoading={dataLoading}
               currentUser={currentUser}
               setCurrentUser={setCurrentUser}
+              setDataLoading={setDataLoading}
             />
           </InfiniteScroll>
         </div>
