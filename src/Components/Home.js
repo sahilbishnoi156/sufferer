@@ -16,58 +16,59 @@ export default function Home() {
   const [currentUser, setCurrentUser] = useState({});
   const [hasMoreData, setHasMoreData] = useState(true);
 
-  const fetchPosts = async () => {
+  const fetchData = async () => {
     try {
       setDataLoading(true);
+      setProgress(30);
+  
       const timestamp = new Date().getTime();
-      const response = await fetch(
+  
+      const postsResponse = await fetch(
         `/api/quote?sLimit=${0}&eLimit=${dataLimit}&timestamp=${timestamp}`
       );
-      const data = await response.json();
+      const postsData = await postsResponse.json();
+  
+      const userResponse = await fetch(
+        `/api/users/getUser/${
+          session?.user.id || localStorage.getItem("Sufferer-site-userId")
+        }`
+      );
+      const user = await userResponse.json();
+  
       setDataLoading(false);
-      setAllPosts(data.posts);
-      setHasMoreData(data.totalPosts > dataLimit);
-      return data;
+      setAllPosts(postsData.posts);
+      setCurrentUser(user);
+      setProgress(100);
     } catch (error) {
-      console.log("failed to get posts", error);
+      console.log("Failed to get data", error);
     }
   };
-
-  const fetchCurrentUser = async () => {
-    setProgress(30);
-
-    const response = await fetch(
-      `/api/users/getUser/${
-        session?.user.id || localStorage.getItem("Sufferer-site-userId")
-      }`
-    );
-    const user = await response.json();
-    setCurrentUser(user);
-    setProgress(100);
-  };
+  
 
   const fetchMoreData = async () => {
     const newStartLimit = dataLimit;
-    const newEndLimit = dataLimit + 4;
+    const newEndLimit = newStartLimit + 4;
     const timestamp = new Date().getTime();
     const response = await fetch(
       `/api/quote?sLimit=${newStartLimit}&eLimit=${newEndLimit}&timestamp=${timestamp}`
     );
-
+  
     const data = await response.json();
-    if (data.posts.length > 0) {
-      setAllPosts((prevPosts) => [...prevPosts, ...data.posts]);
-      setDataLimit(newEndLimit);
-    } else {
-      setHasMoreData(false);
-    }
+    setAllPosts((prevPosts) => [...prevPosts, ...data.posts]);
+    setDataLimit(newEndLimit);
+    setHasMoreData(data.totalPosts > newEndLimit);
   };
+  
+
+  const Loader = () => (
+    <div className="w-full flex items-center justify-center">
+      <h2 className="text-white">Loading...</h2>
+    </div>
+  );
+  
 
   useEffect(() => {
-    if (allPosts.length === 0) {
-      fetchPosts();
-      fetchCurrentUser();
-    }
+    fetchData();
   }, []);
 
   if (status === "loading") {
@@ -86,11 +87,7 @@ export default function Home() {
             dataLength={allPosts.length}
             next={fetchMoreData}
             hasMore={hasMoreData}
-            loader={
-              <div className="w-full flex items-center justify-center">
-              <h2 className="text-white">Loading...</h2>
-              </div>
-            }
+            loader={<Loader />}
           >
             <Quotes
               posts={allPosts}
