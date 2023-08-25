@@ -37,8 +37,6 @@ export default function login() {
     return data;
   };
 
-
-
   // Use Effect
   useEffect(() => {
     if ((localStorage.getItem("Sufferer-site-authToken"))) {

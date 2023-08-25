@@ -210,7 +210,6 @@ export default function QuoteItem({
       {togglePostInfo && (
         <div
           className="absolute h-full w-full backdrop-blur-lg rounded-3xl z-50"
-          onClick={() => setTogglePostInfo(!togglePostInfo)}
         >
           <div
             id="post-info"
@@ -236,7 +235,7 @@ export default function QuoteItem({
                 {currentUser.savedPosts.includes(id) ? "Saved" : "Save"}
               </li>
               <li className="w-full h-[1px] bg-slate-400"></li>
-              {pathname === "/profile" ? (
+              {post.creator._id === currentUser._id ? (
                 <>
                   <li
                     className="block px-4 py-2 hover:rotate-2 cursor-pointer transition-all"

@@ -19,7 +19,7 @@ export default function ({ tabType, userId, setProgress }) {
     const data = await response.json();
     setProgress(100);
     setDataLoading(false);
-    setUsers(data);
+    setUsers(data.reverse());
   };
 
   const fetchSearchedUser = async (searchInput) => {

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Quotes from "@/Components/Quotes";
-import SavedPosts from "@/Components/PostType";
+import PostType from "@/Components/PostType";
 import Loading from "../Components/Loading";
 
 export default function MainProfile({
@@ -296,7 +296,6 @@ export default function MainProfile({
                   type="button"
                   className=" my-4 text-sm p-4 py-1 rounded-lg select-none bg-slate-700 hover:scale-105 cursor-pointer"
                 >
-                  {" "}
                   edit profile
                 </Link>
               ) : (
@@ -398,15 +397,15 @@ export default function MainProfile({
           <div className="w-full relative" id="profile-quotes">
             {postType === "userPosts" ? (
               <Quotes
-                posts={currentUserPosts}
+                posts={currentUserPosts.reverse()}
                 section={section}
                 currentUser={currentUser}
                 setCurrentUser={setCurrentUser}
                 pathname={pathname}
               />
             ) : (
-              <SavedPosts
-                allPosts={allPosts}
+              <PostType
+                allPosts={allPosts.reverse()}
                 section={section}
                 setCurrentUser={setCurrentUser}
                 setCurrentUserPosts={setCurrentUserPosts}

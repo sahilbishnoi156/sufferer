@@ -8,40 +8,47 @@ export default function Search({
   fetchUsers,
 }) {
   const [searchInput, setSearchInput] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
 
   const fetchSearchedUser = async (searchInput) => {
     try {
       setDataLoading(true);
+      setIsFetching(true);
       const response = await fetch(`/api/users/findUser/${searchInput}`);
       const data = await response.json();
       setDataLoading(false);
       Array.isArray(data) ? setUsers(data) : setUsers([data]);
+      setIsFetching(false);
     } catch (error) {
       console.log("failed to get quotes", error);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSearchProg(true);
-    if (searchInput === "") {
-      fetchUsers();
+  const handleUserSearch = async (e) => {
+    e.target.value && setSearchInput(e.target.value);
+    if (isFetching) {
+      return;
     } else {
-      fetchSearchedUser(searchInput);
+      setSearchProg(true);
+      if (searchInput === "") {
+        fetchUsers();
+      } else {
+        fetchSearchedUser(searchInput);
+      }
     }
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
       className="w-full flex items-center justify-between p-2 border-2 border-slate-700 rounded-lg"
+      onSubmit={handleUserSearch}
     >
       <input
         type="text"
         className="bg-transparent outline-none w-full h-full"
         placeholder="Search Users"
         value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
+        onChange={handleUserSearch}
       />
       <button className="p-2" type="submit">
         <svg
