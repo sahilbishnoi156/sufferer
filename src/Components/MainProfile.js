@@ -84,18 +84,19 @@ export default function MainProfile({
 
   // Use Effect
   useEffect(() => {
-    console.log(session?.user);
-    if (
-      status === "authenticated" ||
-      localStorage.getItem("Sufferer-site-authToken")
-    ) {
-      setCurrentUser(user);
-      setUserInfo({ followers: user.followers, followings: user.followings });
-    } else if (
-      status === "unauthenticated" ||
-      localStorage.getItem("Sufferer-site-authToken")
-    ) {
-      router.push("/");
+    if (session || localStorage.getItem("Sufferer-site-userId")) {
+      if (
+        status === "authenticated" ||
+        localStorage.getItem("Sufferer-site-authToken")
+      ) {
+        setCurrentUser(user);
+        setUserInfo({ followers: user.followers, followings: user.followings });
+      } else if (
+        status === "unauthenticated" ||
+        localStorage.getItem("Sufferer-site-authToken")
+      ) {
+        router.push("/");
+      }
     }
 
     // Profile navigation
@@ -111,7 +112,7 @@ export default function MainProfile({
         profileNavRef.current.style.setProperty("--width", calcWidth);
       }
     });
-  }, [status, user.followers]);
+  }, [status, user.followers, session]);
 
   // Loading
   if (status === "loading" || loading) {
@@ -161,7 +162,10 @@ export default function MainProfile({
         <div className="w-full h-14 sm:hidden block">
           <div className="w-full h-14 fixed backdrop-blur-lg sm:hidden border-b-2 border-gray-800 top-0 left-0 z-50">
             <div className="flex items-center justify-between w-full px-8 h-full">
-              <div>{session?.user.name}</div>
+              <div>
+                {session?.user.name ||
+                  localStorage.getItem("Sufferer-site-username")}
+              </div>
               <div className="flex gap-4 items-center justify-between">
                 <Link
                   href="/notification"
@@ -284,8 +288,19 @@ export default function MainProfile({
               <p className="w-full overflow-auto bg-transparent whitespace-pre-line text-sm ">
                 {user.about}
               </p>
-              {pathname === "/profile" ? null : (
-                <div className="mt-4 flex gap-4 mb-4">
+              {pathname === "/profile" ? (
+                <Link
+                  href="/setting"
+                  prefetch
+                  replace
+                  type="button"
+                  className=" my-4 text-sm p-4 py-1 rounded-lg select-none bg-slate-700 hover:scale-105 cursor-pointer"
+                >
+                  {" "}
+                  edit profile
+                </Link>
+              ) : (
+                <div className="my-4 flex gap-4">
                   {!followClicked ? (
                     (session?.user.id ||
                       localStorage.getItem("Sufferer-site-userId")) !==

@@ -1,9 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=REM&family=Rubik&display=swap') ;
+@import url('https://fonts.googleapis.com/css2?family=Hind&family=REM:wght@500&family=Tulpen+One&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 body {
-  font-family: 'Rubik' !important;
+  font-family: 'REM';
   background-color: black;
 }
 *{

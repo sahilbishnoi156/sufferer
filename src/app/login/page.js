@@ -54,6 +54,6 @@ export default function login() {
     return <Loading />;
   }
   return (
-    <div className='bg-black h-full w-screen sticky top-0 left-0 z-50 flex items-center justify-center'><Login providers={providers}/></div>
+    <div className='bg-black h-full w-screen flex items-center justify-center py-10 select-none px-4'><Login providers={providers}/></div>
   )
 }

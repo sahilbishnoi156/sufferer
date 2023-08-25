@@ -7,7 +7,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-export default function Login({providers}) {
+export default function Login({ providers }) {
   const [loading, setLoading] = useState(false);
   const [user_email, setUser_email] = useState("");
   const [user_password, setUser_password] = useState("");
@@ -65,6 +65,7 @@ export default function Login({providers}) {
         } else {
           localStorage.setItem("Sufferer-site-authToken", data.authToken);
           localStorage.setItem("Sufferer-site-userId", data.userId);
+          localStorage.setItem("Sufferer-site-username", data.user_name);
 
           toast.success(`Welcome ${data.user_name}`, {
             position: "top-right",
@@ -84,7 +85,7 @@ export default function Login({providers}) {
       console.log(error);
     }
   };
-  
+
   // Continue wit google
   const continueWithGoogle = async (id) => {
     setLoading(true);
@@ -115,14 +116,13 @@ export default function Login({providers}) {
     }
   };
 
-  
   if (status === "loading" || loading) {
     return <Loading />;
   }
   return (
-    <div className="flex sm:flex-row flex-col-reverse gap-16 sm:gap-2 w-full h-screen text-white items-center justify-start p-6 sm:p-16 bg-black">
-      <div className="sm:w-2/5 w-full flex flex-col items-center sm:justify-center justify-between h-full gap-8  ">
-        <div className="flex-col items-center justify-center gap-16 sm:gap-0 sm:flex hidden">
+    <div className="flex sm:flex-row flex-col-reverse gap-10 sm:gap-2 w-full h-screen text-white items-center justify-start bg-black">
+      <div className="sm:w-1/2 w-full flex flex-col items-center sm:justify-center justify-between h-full gap-8 sm:pl-16 pl-0">
+        <div className="flex-col items-center justify-evenly gap-16 sm:gap-0 sm:flex hidden ">
           <div className="w-full text-center">
             <span className="text-6xl text-center w-3/4" id="site-heading">
               Welcome Back!
@@ -206,7 +206,11 @@ export default function Login({providers}) {
             Sign in with Facebook
           </button>
         </div>
-        <Link className="text-blue-400 sm:block hidden  " href="/register">
+        <Link
+          className="text-blue-400 sm:block hidden"
+          href="/register"
+          replace
+        >
           Don't have an account ?
         </Link>
       </div>
@@ -217,8 +221,10 @@ export default function Login({providers}) {
         <div className="w-full items-center justify-center flex">
           <span className="text-6xl" id="site-heading">
             LOGIN
-          </span>{" "}
-          <i className="fa-solid fa-hippo ml-4 text-white text-6xl"></i>
+          </span>
+          <Link href="/">
+            <i className="fa-solid fa-hippo ml-4 text-white text-5xl"></i>
+          </Link>
         </div>
         <form className="w-full sm:w-2/3" onSubmit={handleLoginSubmit}>
           <div className="mb-6">

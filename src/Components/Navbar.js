@@ -1,10 +1,12 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [navToggle, setNavToggle] = useState(false);
   const headingRef = useRef(null);
+  const pathname = usePathname();
   const openStyle = {
     transition: "1s",
     width: "100%",
@@ -47,7 +49,7 @@ export default function Navbar() {
     <nav
       className={`h-12 sm:h-screen flex justify-between items-center flex-col bg-black ${
         navToggle ? "w-60" : "w-16"
-      } text-white px-5 py-8 border-r-2 border-gray-700 h-screen fixed transition-all duration-500`}
+      } text-white px-5 py-8 border-r-2 border-gray-700 h-screen fixed transition-all duration-500 ${(pathname === "/login") || (pathname === "/register") ? "hidden": "block"}`}
     >
       <div
         className={`flex justify-between items-start flex-col bg-black text-white h-2/5 w-full gap-20 transition-all`}
@@ -94,6 +96,7 @@ export default function Navbar() {
             href="/search"
             className="text-xl flex items-start justify-start gap-4  h-6 "
             replace
+            prefetch
             scroll={false}
           >
             <i className="text-xl fa-solid fa-magnifying-glass"></i>{" "}
@@ -135,6 +138,7 @@ export default function Navbar() {
           <Link
             href={`/profile`}
             replace
+            prefetch
             className="text-xl flex items-start justify-start gap-4 h-6  "
             scroll={false}
           >
@@ -155,6 +159,7 @@ export default function Navbar() {
           href="/setting"
           className="text-xl flex items-center justify-start gap-4  "
           scroll={false}
+          prefetch
           replace
         >
           <i className="fa-solid fa-gear text-3xl hover:rotate-45 transition duration-300"></i>
@@ -168,6 +173,7 @@ export default function Navbar() {
         <Link
           href="createpost"
           replace
+          prefetch
           className="text-xl flex items-center justify-start gap-4  "
         >
           <i className="fa-solid fa-plus text-3xl hover:rotate-90 transition duration-300 "></i>

@@ -45,6 +45,7 @@ export default function Login() {
       if (json.userCreated) {
         localStorage.setItem("Sufferer-site-authToken", json.authToken);
         localStorage.setItem("Sufferer-site-userId", json.newUser._id);
+        localStorage.setItem("Sufferer-site-username", json.newUser.username);
         toast.success(`Welcome ${firstName} `, {
           position: "top-right",
           autoClose: 3000,
@@ -136,13 +137,13 @@ export default function Login() {
     return <Loading />;
   }
   return (
-    <div className="flex w-full h-full bg-black text-white items-center justify-start sm:p-16">
+    <div className="flex w-full h-full bg-black text-white items-center justify-start sm:p-16 select-none">
       <div className="h-full w-full flex flex-col items-center justify-center gap-8">
         <div>
-          <span className="text-6xl" id="register-heading">
+          <span className="text-5xl" id="register-heading">
             Register
           </span>
-          <i className="fa-solid fa-hippo ml-4 text-white text-6xl"></i>
+          <i className="fa-solid fa-hippo ml-4 text-white text-5xl"></i>
         </div>
         <form className="sm:w-2/3 w-11/12 " onSubmit={handleRegisterSubmit}>
           <div className="grid gap-6 mb-6 md:grid-cols-2">
@@ -279,7 +280,7 @@ export default function Login() {
               htmlFor="remember"
               className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >
-              I agree with the{" "}
+              I agree with the
               <a
                 href="#"
                 className="text-blue-600 hover:underline dark:text-blue-500"
@@ -311,7 +312,7 @@ export default function Login() {
           >
             Register
           </button>)}
-            <Link href="/login" className="text-blue-400">
+            <Link href="/login" className="text-blue-400" replace>
               Already have an account ?
             </Link>
           </div>

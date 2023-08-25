@@ -26,7 +26,7 @@ export default function Quotes({
             id="quotes-heading"
             className="text-2xl sm:text-4xl w-full text-center"
           >
-            FEED
+            Sufferer
           </h1>
           <div className="h-[1px] w-1/2 bg-slate-400"></div>
         </div>

@@ -19,10 +19,13 @@ export default function Home() {
     try {
       setDataLoading(true);
       setProgress(30);
-      // const timestamp = new Date().getTime();
-      const postsResponse = await fetch(`/api/quote?_limit=4`, {
-        next: { revalidate: 60 },
-      });
+      const timestamp = new Date().getTime();
+      const postsResponse = await fetch(
+        `/api/quote?_limit=4&timestamp=${timestamp}`,
+        {
+          next: { revalidate: 60 },
+        }
+      );
       const postsData = await postsResponse.json();
       setProgress(40);
       const userResponse = await fetch(
@@ -43,14 +46,17 @@ export default function Home() {
   };
 
   const fetchMoreData = async () => {
-    const response = await fetch(`/api/quote?_start=${posts.length}&_limit=4`);
+    const timestamp = new Date().getTime();
+    const response = await fetch(
+      `/api/quote?_start=${posts.length}&_limit=4&timestamp=${timestamp}`
+    );
     const data = await response.json();
     setPosts((prevPosts) => [...prevPosts, ...data.posts]);
     setHasMoreData(data.totalPosts > posts.length);
   };
 
   const Loader = () => (
-    <div className="w-full flex items-center justify-center">
+    <div className="w-full flex items-center justify-center mb-12">
       <h2 className="text-white">Loading...</h2>
     </div>
   );

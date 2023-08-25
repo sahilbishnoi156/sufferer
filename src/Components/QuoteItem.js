@@ -25,7 +25,7 @@ export default function QuoteItem({
   const [isFetchingSave, setIsFetchingSave] = useState(false);
   const [postSaved, setPostSaved] = useState(false);
   const [textCopied, setTextCopied] = useState(false);
-  const [reportPost, setReportPost] = useState(false)
+  const [reportPost, setReportPost] = useState(false);
   const [postInfo, setPostInfo] = useState({
     likes: [],
     comments: [],
@@ -203,9 +203,113 @@ export default function QuoteItem({
   }, [date, post]);
   return (
     <div
-      className={`text-white lg:w-3/4 w-full h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between overflow-hidden relative`}
+      className={`text-white lg:w-3/4 w-full h-fit bg-black border border-slate-500 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between relative`}
       id={id}
     >
+      {/* DropDown */}
+      {togglePostInfo && (
+        <div
+          className="absolute h-full w-full backdrop-blur-lg rounded-3xl z-50"
+          onClick={() => setTogglePostInfo(!togglePostInfo)}
+        >
+          <div
+            id="post-info"
+            className="w-full xl:w-1/3 scale-125 opacity-0 h-fit absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 bg-slate-700 px-4 rounded-2xl"
+          >
+            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 w-full h-full flex items-center justify-center gap-2 flex-col ">
+              <li
+                className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
+                onClick={() => {
+                  setPostSaved(!postSaved);
+                  handleTogglePostSave();
+                }}
+              >
+                <i
+                  className={`fa-${
+                    postSaved ||
+                    (currentUser.savedPosts &&
+                      currentUser.savedPosts.includes(id))
+                      ? "solid"
+                      : "regular"
+                  } fa-bookmark mr-2`}
+                ></i>
+                {currentUser.savedPosts.includes(id) ? "Saved" : "Save"}
+              </li>
+              <li className="w-full h-[1px] bg-slate-400"></li>
+              {pathname === "/profile" ? (
+                <>
+                  <li
+                    className="block px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
+                    onClick={handleEditClick}
+                  >
+                    <i className="fa-solid fa-pen-to-square cursor-pointer mr-2"></i>
+                    Edit Post
+                  </li>
+                  <li className="w-full h-[1px] bg-slate-400"></li>
+                  <li
+                    className="px-4 py-2 hover:rotate-2 text-red-400 cursor-pointer transition-all"
+                    onClick={handleDelete}
+                  >
+                    <i className="fa-solid fa-trash cursor-pointer mr-2"></i>
+                    Delete Post
+                  </li>
+                  <li className="w-full h-[1px] bg-slate-400"></li>
+                </>
+              ) : (
+                <></>
+              )}
+              <li
+                className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all text-red-500 brightness-150"
+                onClick={() => setReportPost(!reportPost)}
+              >
+                {reportPost ? (
+                  <>
+                    <i className="fa-regular fa-circle-check mr-2 "></i>
+                    Reported
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <i className="fa-regular fa-flag mr-2"></i>
+                    Report Post
+                  </>
+                )}
+              </li>
+              <li className="w-full h-[1px] bg-slate-400"></li>
+              <li
+                className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
+                onClick={handleCopyLink}
+              >
+                {!textCopied ? (
+                  <>
+                    <i className="fa-regular fa-copy mr-2"></i>
+                    Copy Link
+                  </>
+                ) : (
+                  <>
+                    <i className="fa-regular fa-circle-check mr-2 "></i>
+                    Copied
+                  </>
+                )}
+              </li>
+              <li className="w-full h-[1px] bg-slate-400"></li>
+              <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all">
+                <Link href={`/post/${id}`} className="h-full w-full">
+                  <i className="fa-regular fa-eye-slash mr-2"></i>Go to post
+                </Link>
+              </li>
+              <li className="w-full h-[1px] bg-slate-400"></li>
+              <li
+                className="hover:rotate-2 cursor-pointer transition-all px-4 py-2"
+                onClick={() => setTogglePostInfo(false)}
+              >
+                <i className="fa-solid fa-xmark mr-2"></i>
+                Cancel
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
       <div className="w-full h-fit p-2 sm:p-4">
         {/* User Profile  */}
         <div className="w-full flex items-center justify-between pb-2 sm:pb-4">
@@ -232,106 +336,10 @@ export default function QuoteItem({
           <div className="flex gap-6 items-center justify-center relative">
             <div
               className="w-8 h-8 flex items-center justify-center cursor-pointer"
-              onClick={() => setTogglePostInfo(true)}
+              onClick={() => setTogglePostInfo(!togglePostInfo)}
             >
               <i className="fa-solid fa-ellipsis-vertical fa-rotate-90 mr-2 cursor-pointer select-none"></i>
             </div>
-
-            {/* Post Info */}
-            {togglePostInfo && (
-              <div
-                className="h-screen w-full flex items-center justify-center backdrop-blur-lg fixed left-0 z-50 select-none"
-                id="post-info"
-              >
-                <div
-                  className="h-fit p-2 w-64 bg-slate-800 rounded-3xl relative z-40"
-                  id="post-info"
-                >
-                  <div className="w-full h-full">
-                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200 w-full h-full flex items-center justify-center gap-2 flex-col relative ">
-                      <li
-                        className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
-                        onClick={() => {
-                          setPostSaved(!postSaved);
-                          handleTogglePostSave();
-                        }}
-                      >
-                        <i
-                          className={`fa-${
-                            postSaved ||
-                            (currentUser.savedPosts &&
-                              currentUser.savedPosts.includes(id))
-                              ? "solid"
-                              : "regular"
-                          } fa-bookmark mr-2`}
-                        ></i>
-                        {currentUser.savedPosts.includes(id) ? "Saved" : "Save"}
-                      </li>
-                      <li className="w-full h-[1px] bg-slate-400"></li>
-                      {pathname === "/profile" ? (
-                        <>
-                          <li
-                            className="block px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
-                            onClick={handleEditClick}
-                          >
-                            <i className="fa-solid fa-pen-to-square cursor-pointer mr-2"></i>
-                            Edit Post
-                          </li>
-                          <li className="w-full h-[1px] bg-slate-400"></li>
-                          <li
-                            className="px-4 py-2 hover:rotate-2 text-red-400 cursor-pointer transition-all"
-                            onClick={handleDelete}
-                          >
-                            <i className="fa-solid fa-trash cursor-pointer mr-2"></i>
-                            Delete Post
-                          </li>
-                          <li className="w-full h-[1px] bg-slate-400"></li>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all text-red-500 brightness-150" onClick={()=>setReportPost(!reportPost)}>
-                        {reportPost ? <><i className="fa-regular fa-circle-check mr-2 "></i>Reported</> : <> <i className="fa-regular fa-flag mr-2"></i>
-                        Report Post</>}
-                       
-                      </li>
-                      <li className="w-full h-[1px] bg-slate-400"></li>
-                      <li
-                        className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all"
-                        onClick={handleCopyLink}
-                      >
-                        {!textCopied ? (
-                          <>
-                            <i className="fa-regular fa-copy mr-2"></i>
-                            Copy Link
-                          </>
-                        ) : (
-                          <>
-                            <i className="fa-regular fa-circle-check mr-2 "></i>
-                            Copied
-                          </>
-                        )}
-                      </li>
-                      <li className="w-full h-[1px] bg-slate-400"></li>
-                      <li className="px-4 py-2 hover:rotate-2 cursor-pointer transition-all">
-                        <Link href={`/post/${id}`} className="h-full w-full">
-                          <i className="fa-regular fa-eye-slash mr-2"></i>Go to
-                          post
-                        </Link>
-                      </li>
-                      <li className="w-full h-[1px] bg-slate-400"></li>
-                      <li
-                        className="hover:rotate-2 cursor-pointer transition-all px-4 py-2"
-                        onClick={() => setTogglePostInfo(false)}
-                      >
-                        <i className="fa-solid fa-xmark mr-2"></i>
-                        Cancel
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

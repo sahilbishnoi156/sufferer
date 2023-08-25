@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import Loading from "../../../../Components/Loading";
@@ -15,6 +15,23 @@ export default function page({ params }) {
   const router = useRouter();
   const [usernameExists, setUsernameExists] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Handling Back User
+  const handleDeleteUser = async () => {
+    setLoading(true);
+    const response = await fetch(
+      `/api/auth/deleteuser/${session?.user?.id.toString()}`,
+      {
+        method: "DELETE",
+      }
+    );
+    const data = await response.json();
+    if (data.status === 200) {
+      router.push("/login");
+      await signOut();
+    }
+    setLoading(false);
+  };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -126,47 +143,38 @@ export default function page({ params }) {
     }
     return data;
   };
-  
+
   useEffect(() => {
     if (status === "authenticated") {
-      checkUserName();
+      if (session) {
+        checkUserName();
+      }
     }
     if (status === "unauthenticated" || session?.user.id !== params.id) {
       setLoading(true);
-      toast.warn(`Permission denied`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
       router.push("/login");
     }
-  }, [status]);
+  }, [status, session]);
   if (status === "loading" || loading) {
     return <Loading />;
   }
   return (
-    <div className="w-full h-full flex items-center justify-center absolute top-0 left-0 bg-black z-10">
+    <div className="w-screen h-full flex items-center justify-center sticky top-0 left-0 z-50 bg-black py-10 pb-16">
       <form
-        className="w-1/2 h-full flex items-center justify-center flex-col gap-16"
+        className="sm:w-1/2 w-3/4 h-full flex items-center justify-center flex-col bg-black gap-16"
         onSubmit={handleLoginSubmit}
       >
         <div className="flex items-center justify-center flex-col w-full">
-          <div className="flex items-center justify-center gap-16 ">
+          <div className="flex items-center justify-center gap-16 sm:flex-row flex-col ">
             <img
               src={session?.user.image}
               alt="Not found"
               className="h-40 w-40 rounded-full"
             />
             <div>
-              <div className="text-white">
-                Hi{" "}
-                <span className="text-2xl text-orange-500">
-                  {" "}
+              <div className="text-white flex items-center sm:justify-start justify-center">
+                Hi
+                <span className="text-2xl text-orange-500 ml-2">
                   {session?.user.name}
                 </span>
               </div>
@@ -181,7 +189,7 @@ export default function page({ params }) {
         <div className=" w-full">
           <label
             htmlFor="username"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="block mb-2 text-xs sm:text-lg font-medium text-gray-900 dark:text-white"
           >
             Username (must contain 5 characters)
           </label>
@@ -208,10 +216,10 @@ export default function page({ params }) {
             )}
           </div>
         </div>
-        <div className="mb-6 w-full">
+        <div className=" w-full">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="block mb-2 text-xs sm:text-lg font-medium text-gray-900 dark:text-white"
           >
             Password (must contain 8 characters)
           </label>
@@ -240,17 +248,25 @@ export default function page({ params }) {
             Show password
           </label>
         </div>
-        <button
-          type="submit"
-          disabled={usernameExists || username === "" || username.length < 6}
-          className={`text-white focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2  ${
-            usernameExists || username === "" || username.length < 6
-              ? "bg-gray-700"
-              : "bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:bg-blue-800"
-          }`}
-        >
-          proceed
-        </button>
+        <div className="flex items-center justify-center gap-6">
+          <button
+            type="submit"
+            disabled={usernameExists || username === "" || username.length < 6}
+            className={`text-white focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 sm:w-fit w-full text-center mr-2 mb-2  ${
+              usernameExists || username === "" || username.length < 6
+                ? "bg-gray-700"
+                : "bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:bg-blue-800"
+            }`}
+          >
+            Proceed
+          </button>
+          <button
+            onClick={handleDeleteUser}
+            className="bg-slate-500 dark:bg-slate-500 dark:hover:bg-slate-600 hover:bg-slate-700 text-white focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 sm:w-fit w-full text-center mr-2 mb-2"
+          >
+            Go back
+          </button>
+        </div>
       </form>
     </div>
   );
