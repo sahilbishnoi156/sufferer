@@ -235,7 +235,7 @@ export default function QuoteItem({
                 {currentUser.savedPosts.includes(id) ? "Saved" : "Save"}
               </li>
               <li className="w-full h-[1px] bg-slate-400"></li>
-              {post.creator._id === currentUser._id ? (
+              {post.creator._id === session?.user.id || localStorage.getItem("Sufferer-site-userId") ? (
                 <>
                   <li
                     className="block px-4 py-2 hover:rotate-2 cursor-pointer transition-all"

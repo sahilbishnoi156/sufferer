@@ -19,7 +19,7 @@ export default function page() {
       const response = await fetch(`/api/users/${session?.user.id|| localStorage.getItem("Sufferer-site-userId")}/quotes`);
       setProgress(80)
       const data = await response.json();
-      setPosts(data);
+      setPosts(data.reverse());
       setProgress(100)
     };
     const fetchUser = async () => {
@@ -27,6 +27,7 @@ export default function page() {
       const data = await response.json();
       setUser(data);
     };
+
     if ((status === "authenticated" && session?.user.id) || localStorage.getItem("Sufferer-site-authToken")) {
       setLoading(true)
       fetchPosts();

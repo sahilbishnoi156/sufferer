@@ -37,7 +37,6 @@ export default function Search({
       }
     }
   };
-
   return (
     <form
       className="w-full flex items-center justify-between p-2 border-2 border-slate-700 rounded-lg"

@@ -23,7 +23,7 @@ export default function page({ params }) {
       const response = await fetch(`/api/users/${params?.id}/quotes`);
       setProgress(60);
       const data = await response.json();
-      setQuotes(data);
+      setQuotes(data.reverse());
       setProgress(100);
     };
     const fetchUser = async () => {

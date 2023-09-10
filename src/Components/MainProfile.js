@@ -48,7 +48,7 @@ export default function MainProfile({
     const response = await fetch(`/api/quote/allquotes`);
     setProgress(80);
     const data = await response.json();
-    setAllPosts(data.posts);
+    setAllPosts(data.posts.reverse());
     setProgress(100);
   };
 
@@ -397,7 +397,7 @@ export default function MainProfile({
           <div className="w-full relative" id="profile-quotes">
             {postType === "userPosts" ? (
               <Quotes
-                posts={currentUserPosts.reverse()}
+                posts={currentUserPosts}
                 section={section}
                 currentUser={currentUser}
                 setCurrentUser={setCurrentUser}
