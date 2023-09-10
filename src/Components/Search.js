@@ -25,12 +25,13 @@ export default function Search({
   };
 
   const handleUserSearch = async (e) => {
-    e.target.value && setSearchInput(e.target.value);
+    e.preventDefault();
+    setSearchInput(e.target.value);
     if (isFetching) {
-      return;
+      return 0;
     } else {
       setSearchProg(true);
-      if (searchInput === "") {
+      if (searchInput.trim() === "") {
         fetchUsers();
       } else {
         fetchSearchedUser(searchInput);

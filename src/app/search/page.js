@@ -59,19 +59,25 @@ export default function page() {
           <Skeleton type="sideProfile" />
         ) : (
           <>
-            {allUsers.slice(0, 5).map((user) => {
-              return (
-                <UserIds
-                  heading="People You May Know"
-                  key={user._id}
-                  username={user.username}
-                  user_image={user.image}
-                  userId={user._id}
-                  given_name={user.given_name}
-                  family_name={user.family_name}
-                />
-              );
-            })}
+            {!allUsers ? (
+              <>User Not Found</>
+            ) : (
+              <>
+                {allUsers.slice(0, 5).map((user) => {
+                  return (
+                    <UserIds
+                      heading="People You May Know"
+                      key={user._id}
+                      username={user.username}
+                      user_image={user.image}
+                      userId={user._id}
+                      given_name={user.given_name}
+                      family_name={user.family_name}
+                    />
+                  );
+                })}
+              </>
+            )}
           </>
         )}
       </div>
