@@ -369,8 +369,8 @@ export default function MainProfile({
             <div onClick={() => setPostType("userPosts")}>Posts</div>
             <div
               onClick={() => {
-                allPosts.length <= 0 && getAllPost();
                 setPostType("savedPosts");
+                allPosts.length <= 0 && getAllPost();
               }}
             >
               Saved
